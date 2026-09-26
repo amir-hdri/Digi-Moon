@@ -1,0 +1,34 @@
+{
+  "name": "مون مارکت | سوپرمارکت زنجیره‌ای و بهداشتی",
+  "short_name": "مون مارکت",
+  "description": "خرید مایحتاج روزمره، مواد غذایی، لبنیات تازه و محصولات آرایشی و بهداشتی با ارسال سریع",
+  "lang": "fa-IR",
+  "dir": "rtl",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#00bb7f",
+  "categories": ["shopping", "food", "grocery"],
+  "icons": [
+    {
+      "src": "/logo-moonmarket.jpg",
+      "sizes": "282x294",
+      "type": "image/jpeg",
+      "purpose": "any"
+    },
+    {
+      "src": "/logo-moonmarket.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "سبد خرید", "url": "/cart" },
+    { "name": "پیام‌ها", "url": "/messages" },
+    { "name": "شعب", "url": "/branches" },
+    { "name": "پشتیبانی", "url": "/support" }
+  ]
+}

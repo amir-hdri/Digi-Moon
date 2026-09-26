@@ -1,0 +1,232 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   DIJIMOON DESIGN SYSTEM - TAILWIND CSS v4 THEME & UTILITIES
+   Framework: Next.js 15 App Router (Turbopack + React 19)
+   Styling: Tailwind CSS v4 (@tailwindcss/postcss)
+   Architecture: CSS-First Design Tokens, RTL-First, Dual-Palette (Slate/Zinc)
+   ========================================================================== */
+
+/* Define Class-Based Dark Mode Variant for Manual & OS Preference Switching */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Define RTL Variant for Bi-directional Layout Control */
+@custom-variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
+
+@theme {
+  /* --- Typography --- */
+  --font-sans: "IRANSans", "Vazirmatn", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, Tahoma, sans-serif;
+  --font-iransans: "IRANSans", sans-serif;
+  --font-vazir: "Vazirmatn", sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  --font-weight-extrabold: 800;
+  --font-weight-black: 900;
+
+  /* --- Spacing System (4px Base Quantization) --- */
+  --spacing: 0.25rem;
+
+  /* --- Radii Hierarchy --- */
+  --radius-sm: 0.125rem;   /* 2px */
+  --radius-md: 0.375rem;   /* 6px */
+  --radius-lg: 0.5rem;     /* 8px */
+  --radius-xl: 0.75rem;    /* 12px (Image containers, back buttons) */
+  --radius-2xl: 1rem;      /* 16px (Product Cards, Buttons, SearchBar, Modals) */
+  --radius-3xl: 1.5rem;    /* 24px (Category Cards, Hero Banners, Drawer Top) */
+  --radius-4xl: 2rem;      /* 32px (Large modal wrappers) */
+  --radius-full: 9999px;   /* Pills, Floating Badges, Circle buttons */
+
+  /* --- Brand Core Emerald Palette (Primary Action & Identity) --- */
+  --color-emerald-50: #ecfdf5;
+  --color-emerald-100: #d0fae5;
+  --color-emerald-200: #a4f4cf;
+  --color-emerald-300: #5ee9b5;
+  --color-emerald-400: #00d294;
+  --color-emerald-500: #00bb7f;  /* Primary Brand Master Token */
+  --color-emerald-600: #009767;  /* Primary Action CTA */
+  --color-emerald-700: #007956;  /* Button Hover State */
+  --color-emerald-800: #005f46;
+
+  /* --- Secondary Brand Green & Teal (Logo & Typography Gradients) --- */
+  --color-green-50: #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #b9f8cf;
+  --color-green-300: #7bf1a8;
+  --color-green-400: #05df72;
+  --color-green-500: #00c758;  /* Logo Gradient Start & Active Checkmarks */
+  --color-green-600: #00a544;
+  --color-green-700: #008138;
+  --color-green-800: #016630;
+
+  --color-teal-300: #46ecd5;
+  --color-teal-500: #00baa7;   /* Logo Gradient End & Text Gradient End */
+  --color-teal-600: #009588;
+
+  /* --- Attention & Badge Accents --- */
+  --color-orange-400: #ff8b1a;
+  --color-orange-500: #fe6e00;  /* Floating Cart Notification Badge */
+  --color-orange-600: #f05100;
+
+  --color-amber-500: #f99c00;   /* Festival Deal Badge */
+  --color-amber-600: #dd7400;
+  --color-amber-700: #b75000;
+
+  --color-red-500: #fb2c36;     /* Discount Pill Badge & Errors */
+  --color-red-600: #e40014;
+
+  /* --- Neutral Grayscale 1: Slate (Light Mode Surfaces) --- */
+  --color-slate-50: #f8fafc;    /* Light Page Background */
+  --color-slate-100: #f1f5f9;   /* Card Dividers & Borders */
+  --color-slate-200: #e2e8f0;   /* Active Borders & Drag Handle */
+  --color-slate-300: #cad5e2;
+  --color-slate-400: #90a1b9;
+  --color-slate-500: #62748e;   /* Secondary Text / Subtitles */
+  --color-slate-600: #45556c;
+  --color-slate-700: #314158;   /* Body Text */
+  --color-slate-800: #1d293d;   /* Headings & Dark Titles */
+  --color-slate-900: #0f172b;   /* Deep Primary Text */
+
+  /* --- Neutral Grayscale 2: Zinc (Dark Mode Surfaces) --- */
+  --color-zinc-100: #f4f4f5;    /* Dark Mode Primary Headings */
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;    /* Dark Mode Body Text */
+  --color-zinc-400: #a1a1aa;    /* Dark Mode Subtitles & Placeholders */
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #52525b;
+  --color-zinc-700: #3f3f46;    /* Dark Mode Active Dividers & Drag Handle */
+  --color-zinc-800: #27272a;    /* Dark Mode Card Borders & Inputs */
+  --color-zinc-900: #18181b;    /* Dark Mode Card Surface & Modal Body */
+  --color-zinc-950: #09090b;    /* Dark Mode Root Page Background */
+
+  /* --- Shadows & Elevations --- */
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08);
+  --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+  /* --- Animation Tokens --- */
+  --animate-floating: floating 2s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   KEYFRAME DEFINITIONS
+   ========================================================================== */
+
+@keyframes floating {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+/* ==========================================================================
+   BASE & RTL CONFIGURATION
+   ========================================================================== */
+
+@layer base {
+  :root {
+    /* Slate Neutral Surface Baseline (Light Mode) */
+    --background: #f8fafc;       /* slate-50 */
+    --foreground: #1d293d;       /* slate-800 */
+    --card: #ffffff;
+    --card-foreground: #1d293d;  /* slate-800 */
+    --border: #e2e8f0;           /* slate-200 */
+    --muted: #f1f5f9;            /* slate-100 */
+    --muted-foreground: #62748e; /* slate-500 */
+    --accent: #ecfdf5;           /* emerald-50 */
+    --accent-foreground: #007956;/* emerald-700 */
+    --ring: #00d294;             /* emerald-400 */
+  }
+
+  .dark {
+    /* Zinc Neutral Surface Baseline (Dark Mode) */
+    --background: #09090b;       /* zinc-950 */
+    --foreground: #f4f4f5;       /* zinc-100 */
+    --card: #18181b;             /* zinc-900 */
+    --card-foreground: #f4f4f5;  /* zinc-100 */
+    --border: #27272a;           /* zinc-800 */
+    --muted: #27272a;            /* zinc-800 */
+    --muted-foreground: #a1a1aa; /* zinc-400 */
+    --accent: #005f46;           /* emerald-800 */
+    --accent-foreground: #a4f4cf;/* emerald-200 */
+    --ring: #00bb7f;             /* emerald-500 */
+  }
+
+  html {
+    direction: rtl;
+    text-align: right;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+  }
+}
+
+/* ==========================================================================
+   CUSTOM UTILITY CLASSES
+   ========================================================================== */
+
+@layer utilities {
+  /* Glassmorphism Frosted Effect (12px Blur, Subtle Border) */
+  .glass-effect {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+  }
+
+  .dark .glass-effect {
+    background-color: rgba(24, 24, 27, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(63, 63, 70, 0.40);
+  }
+
+  /* Persian Gradient Brand Heading Text */
+  .gradient-text {
+    background-image: linear-gradient(to right, #009767, #00baa7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+
+  /* Floating Micro-animation for Attention Badges */
+  .floating {
+    animation: floating 2s ease-in-out infinite;
+  }
+
+  /* Interactive Card Elevation Helpers */
+  .product-card {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .product-card:hover {
+    transform: translateY(-2px);
+  }
+
+  .category-card {
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .category-card:hover {
+    transform: translateY(-2px);
+  }
+}

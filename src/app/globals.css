@@ -1,0 +1,749 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   DIJIMOON DESIGN SYSTEM — TAILWIND CSS v4 THEME & UTILITIES
+   Framework : Next.js 15 App Router (Turbopack + React 19)
+   Styling   : Tailwind CSS v4 (@tailwindcss/postcss)
+   Arch      : CSS-First Design Tokens · RTL-First · Dual-Palette (Slate/Zinc)
+              · Container Queries · Liquid Glass · Modern Micro-interactions
+   ========================================================================== */
+
+/* Class-based dark mode + RTL variants */
+@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant rtl (&:where([dir="rtl"], [dir="rtl"] *));
+
+/* ---- Theme Tokens ---- */
+@theme {
+  /* Typography */
+  --font-sans:    "Vazirmatn", "IRANSans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Tahoma, sans-serif;
+  --font-iransans:"IRANSans", "Vazirmatn", sans-serif;
+  --font-vazir:   "Vazirmatn", sans-serif;
+  --font-mono:    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --font-weight-light:     300;
+  --font-weight-normal:    400;
+  --font-weight-medium:    500;
+  --font-weight-semibold:  600;
+  --font-weight-bold:      700;
+  --font-weight-extrabold: 800;
+  --font-weight-black:     900;
+
+  /* Spacing */
+  --spacing: 0.25rem;
+  --breakpoint-xs: 30rem;
+
+  /* Border Radius */
+  --radius-sm:   0.125rem;
+  --radius-md:   0.375rem;
+  --radius-lg:   0.5rem;
+  --radius-xl:   0.75rem;
+  --radius-2xl:  1rem;
+  --radius-3xl:  1.5rem;
+  --radius-4xl:  2rem;
+  --radius-5xl:  2.5rem;
+  --radius-full: 9999px;
+
+  /* Brand — Emerald */
+  --color-emerald-50:  #ecfdf5;
+  --color-emerald-100: #d0fae5;
+  --color-emerald-200: #a4f4cf;
+  --color-emerald-300: #5ee9b5;
+  --color-emerald-400: #00d294;
+  --color-emerald-500: #00bb7f;
+  --color-emerald-600: #009767;
+  --color-emerald-700: #007956;
+  --color-emerald-800: #005f46;
+
+  /* Brand — Green & Teal */
+  --color-green-50:  #f0fdf4;
+  --color-green-100: #dcfce7;
+  --color-green-200: #b9f8cf;
+  --color-green-300: #7bf1a8;
+  --color-green-400: #05df72;
+  --color-green-500: #00c758;
+  --color-green-600: #00a544;
+  --color-green-700: #008138;
+  --color-green-800: #016630;
+
+  --color-teal-300: #46ecd5;
+  --color-teal-500: #00baa7;
+  --color-teal-600: #009588;
+
+  /* Accent — Orange / Amber / Red */
+  --color-orange-400: #ff8b1a;
+  --color-orange-500: #fe6e00;
+  --color-orange-600: #f05100;
+  --color-amber-500:  #f99c00;
+  --color-amber-600:  #dd7400;
+  --color-amber-700:  #b75000;
+  --color-red-500:    #fb2c36;
+  --color-red-600:    #e40014;
+
+  /* Neutral — Slate (light mode) */
+  --color-slate-50:  #f8fafc;
+  --color-slate-100: #f1f5f9;
+  --color-slate-200: #e2e8f0;
+  --color-slate-300: #cad5e2;
+  --color-slate-400: #90a1b9;
+  --color-slate-500: #62748e;
+  --color-slate-600: #45556c;
+  --color-slate-700: #314158;
+  --color-slate-800: #1d293d;
+  --color-slate-900: #0f172b;
+
+  /* Neutral — Zinc (dark mode) */
+  --color-zinc-100: #f4f4f5;
+  --color-zinc-200: #e4e4e7;
+  --color-zinc-300: #d4d4d8;
+  --color-zinc-400: #a1a1aa;
+  --color-zinc-500: #71717a;
+  --color-zinc-600: #52525b;
+  --color-zinc-700: #3f3f46;
+  --color-zinc-800: #27272a;
+  --color-zinc-900: #18181b;
+  --color-zinc-950: #09090b;
+
+  /* Extended Palette */
+  --color-indigo-400:  #818cf8;
+  --color-indigo-500:  #6366f1;
+  --color-indigo-600:  #4f46e5;
+  --color-violet-400:  #a78bfa;
+  --color-violet-500:  #8b5cf6;
+  --color-violet-600:  #7c3aed;
+  --color-cyan-300:    #67e8f9;
+  --color-cyan-400:    #22d3ee;
+  --color-cyan-500:    #06b6d4;
+  --color-rose-500:    #f43f5e;
+  --color-pink-500:    #ec4899;
+
+  /* Shadows */
+  --shadow-sm:  0 1px 3px 0 rgba(0,0,0,.08), 0 1px 2px -1px rgba(0,0,0,.08);
+  --shadow-md:  0 4px 6px -1px rgba(0,0,0,.08), 0 2px 4px -2px rgba(0,0,0,.08);
+  --shadow-lg:  0 10px 15px -3px rgba(0,0,0,.08), 0 4px 6px -4px rgba(0,0,0,.08);
+  --shadow-xl:  0 20px 25px -5px rgba(0,0,0,.08), 0 8px 10px -6px rgba(0,0,0,.08);
+  --shadow-2xl: 0 25px 50px -12px rgba(0,0,0,.25);
+  --shadow-emerald: 0 8px 24px -4px rgba(0,187,127,.3);
+  --shadow-emerald-lg: 0 16px 40px -8px rgba(0,187,127,.4);
+
+  /* Animation Tokens */
+  --animate-floating:     floating 2.5s ease-in-out infinite;
+  --animate-pulse-glow:   pulse-glow 2s ease-in-out infinite;
+  --animate-shimmer:      shimmer 2s linear infinite;
+  --animate-spin-slow:    spin 14s linear infinite;
+  --animate-spin-reverse: spin-reverse 18s linear infinite;
+  --animate-breathe:      breathe 3s ease-in-out infinite;
+  --animate-slide-up:     slide-up 0.4s cubic-bezier(0.16,1,0.3,1) both;
+  --animate-slide-down:   slide-down 0.4s cubic-bezier(0.16,1,0.3,1) both;
+  --animate-scale-in:     scale-in 0.35s cubic-bezier(0.16,1,0.3,1) both;
+  --animate-scale-check:  scale-check 0.45s cubic-bezier(0.16,1,0.3,1) both;
+  --animate-fade-in:      fade-in 0.3s ease-out both;
+}
+
+/* ==========================================================================
+   KEYFRAMES
+   ========================================================================== */
+
+@keyframes spin-reverse {
+  from { transform: rotate(360deg); }
+  to   { transform: rotate(0deg); }
+}
+
+@keyframes sonar-wave {
+  0%   { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(2.4); opacity: 0; }
+}
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(1000%); }
+}
+
+@keyframes floating {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes breathe {
+  0%, 100% { transform: scale(1);    opacity: 0.85; }
+  50%       { transform: scale(1.04); opacity: 1; }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.03); }
+}
+
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-down {
+  from { opacity: 0; transform: translateY(-16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes scale-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes scale-check {
+  0%   { opacity: 0; transform: scale(0.55); }
+  55%  { opacity: 1; transform: scale(1.12); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50%       { background-position: 100% 50%; }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0);   opacity: 0.6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+/* ==========================================================================
+   BASE & RTL
+   ========================================================================== */
+
+@layer base {
+  :root {
+    --background:       #f8fafc;
+    --foreground:       #1d293d;
+    --card:             #ffffff;
+    --card-foreground:  #1d293d;
+    --border:           #e2e8f0;
+    --muted:            #f1f5f9;
+    --muted-foreground: #62748e;
+    --accent:           #ecfdf5;
+    --accent-foreground:#007956;
+    --ring:             #00d294;
+    /* Surface tints */
+    --surface-raised:   #ffffff;
+    --surface-overlay:  rgba(255,255,255,0.9);
+  }
+
+  .dark {
+    --background:       #09090b;
+    --foreground:       #f4f4f5;
+    --card:             #18181b;
+    --card-foreground:  #f4f4f5;
+    --border:           #27272a;
+    --muted:            #27272a;
+    --muted-foreground: #a1a1aa;
+    --accent:           #005f46;
+    --accent-foreground:#a4f4cf;
+    --ring:             #00bb7f;
+    --surface-raised:   #1c1c1f;
+    --surface-overlay:  rgba(24,24,27,0.92);
+  }
+
+  html {
+    direction: rtl;
+    text-align: right;
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1, "ss01" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100dvh;
+    letter-spacing: 0;
+    word-spacing: normal;
+    line-height: 1.7;
+    /*
+      `clip` instead of `hidden`: `overflow-x: hidden` turns <body> into a scroll
+      container, which silently disables `position: sticky` on the header and
+      category sub-nav. `clip` contains the overflow without that side effect.
+    */
+    overflow-x: clip;
+  }
+
+  /*
+    The previous rule here was `letter-spacing: 0 !important` on ~15 element types.
+    `!important` outranks layer order, so it defeated every Tailwind `tracking-*`
+    utility in the app — including `tracking-[0.5em]` on the OTP box. The Persian
+    body default above is enough; individual utilities are free to override it.
+  */
+  body, button, input, select, textarea,
+  h1, h2, h3, h4, h5, h6, p, span, a, label {
+    font-family: 'Vazirmatn', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 { line-height: 1.45; }
+
+  /* Persian text is naturally tighter than Latin; keep headings from drifting apart. */
+  h1, h2, h3 { text-wrap: balance; }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar             { width: 5px; height: 5px; }
+  ::-webkit-scrollbar-track       { background: transparent; }
+  ::-webkit-scrollbar-thumb       { background: rgba(0,187,127,0.3); border-radius: 99px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(0,187,127,0.55); }
+
+  /* Selection */
+  ::selection { background: rgba(0,187,127,0.25); color: var(--foreground); }
+
+  /* Focus rings */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  /*
+    iOS zooms the viewport when a focused form control computes below 16px, which
+    strands the shopper mid-page. `max()` is kept, but the minimum now lives in a
+    dedicated opt-in class so `text-xs`/`text-sm` on inputs still work as designed.
+  */
+  .no-ios-zoom input,
+  .no-ios-zoom select,
+  .no-ios-zoom textarea {
+    font-size: max(16px, 1em);
+  }
+
+  /* Make the native focus ring follow the brand for keyboard users only. */
+  button:focus-visible,
+  a:focus-visible,
+  [role='button']:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+}
+
+/* ==========================================================================
+   CONTAINER QUERIES SETUP
+   ========================================================================== */
+
+.cq-product { container-type: inline-size; container-name: product; }
+.cq-section { container-type: inline-size; container-name: section; }
+.cq-card    { container-type: inline-size; container-name: card; }
+.cq-nav     { container-type: inline-size; container-name: nav; }
+
+/* ==========================================================================
+   UTILITIES — LIQUID GLASS SYSTEM
+   ========================================================================== */
+
+@layer utilities {
+
+  /* ---- Liquid Glass Base ---- */
+  .glass-effect {
+    background-color: rgba(255,255,255,0.88);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.55);
+    box-shadow:
+      inset 0 1px 1.5px 0 rgba(255,255,255,0.75),
+      inset 0 -1px 1px 0 rgba(0,0,0,0.03),
+      0 8px 32px -4px rgba(0,0,0,0.06);
+  }
+
+  .dark .glass-effect {
+    background-color: rgba(24,24,27,0.88);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255,255,255,0.1);
+    box-shadow:
+      inset 0 1px 1.5px 0 rgba(255,255,255,0.12),
+      inset 0 -1px 1px 0 rgba(0,0,0,0.4),
+      0 12px 40px -4px rgba(0,0,0,0.55);
+  }
+
+  /* ---- Liquid Glass Deep ---- */
+  .liquid-glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.82) 0%, rgba(255,255,255,0.52) 100%);
+    backdrop-filter: blur(14px) saturate(195%);
+    -webkit-backdrop-filter: blur(14px) saturate(195%);
+    border: 1px solid rgba(255,255,255,0.68);
+    box-shadow:
+      inset 0 1.5px 2px 0 rgba(255,255,255,0.88),
+      inset 0 -1px 1px 0 rgba(0,0,0,0.04),
+      0 12px 36px -4px rgba(0,151,103,0.1);
+  }
+
+  .dark .liquid-glass {
+    background: linear-gradient(135deg, rgba(28,28,35,0.84) 0%, rgba(15,23,42,0.68) 100%);
+    backdrop-filter: blur(14px) saturate(195%);
+    -webkit-backdrop-filter: blur(14px) saturate(195%);
+    border: 1px solid rgba(255,255,255,0.12);
+    box-shadow:
+      inset 0 1.5px 1.5px 0 rgba(255,255,255,0.16),
+      inset 0 -1px 1px 0 rgba(0,0,0,0.52),
+      0 14px 44px -4px rgba(0,0,0,0.65);
+  }
+
+  /* ---- Liquid Glass Card ---- */
+  .liquid-glass-card {
+    background: linear-gradient(145deg, rgba(255,255,255,0.94) 0%, rgba(248,250,252,0.72) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.78);
+    box-shadow:
+      inset 0 1px 2px 0 rgba(255,255,255,0.92),
+      0 10px 32px -5px rgba(0,0,0,0.07);
+    transition:
+      transform 0.35s cubic-bezier(0.16,1,0.3,1),
+      box-shadow 0.35s cubic-bezier(0.16,1,0.3,1),
+      border-color 0.25s ease;
+  }
+
+  .dark .liquid-glass-card {
+    background: linear-gradient(145deg, rgba(24,24,27,0.9) 0%, rgba(18,18,21,0.72) 100%);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.09);
+    box-shadow:
+      inset 0 1px 1.5px 0 rgba(255,255,255,0.1),
+      0 12px 40px -6px rgba(0,0,0,0.58);
+    transition:
+      transform 0.35s cubic-bezier(0.16,1,0.3,1),
+      box-shadow 0.35s cubic-bezier(0.16,1,0.3,1),
+      border-color 0.25s ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .liquid-glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow:
+        inset 0 1.5px 2px 0 rgba(255,255,255,0.96),
+        0 20px 44px -10px rgba(0,151,103,0.18);
+    }
+    .dark .liquid-glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow:
+        inset 0 1.5px 2px 0 rgba(255,255,255,0.18),
+        0 20px 48px -10px rgba(0,0,0,0.72);
+    }
+  }
+
+  /* ---- Liquid Reflection Sheen ---- */
+  .liquid-reflection {
+    position: relative;
+    overflow: hidden;
+  }
+  .liquid-reflection::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.22) 0%, transparent 65%);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .liquid-reflection:hover::before { opacity: 1; }
+
+  /* ---- Brand Gradient Text ---- */
+  .gradient-text {
+    background-image: linear-gradient(135deg, #009767, #00baa7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+
+  .gradient-text-warm {
+    background-image: linear-gradient(135deg, #f99c00, #fe6e00);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+
+  .gradient-text-purple {
+    background-image: linear-gradient(135deg, #6366f1, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+  }
+
+  /* ---- Animated Gradient Background ---- */
+  .animated-gradient {
+    background: linear-gradient(270deg, #009767, #00baa7, #05df72, #00d294);
+    background-size: 300% 300%;
+    animation: gradient-shift 6s ease infinite;
+  }
+
+  /* ---- Shimmer Skeleton ---- */
+  .shimmer-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--muted);
+  }
+  .shimmer-skeleton::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255,255,255,0.4) 50%,
+      transparent 100%
+    );
+    animation: shimmer 1.6s linear infinite;
+  }
+  .dark .shimmer-skeleton::after {
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255,255,255,0.08) 50%,
+      transparent 100%
+    );
+  }
+
+  /* ---- Floating micro-animation ---- */
+  .floating  { animation: floating 2.5s ease-in-out infinite; }
+  .breathe   { animation: breathe  3s ease-in-out infinite; }
+
+  /* ---- Emerald Glow ---- */
+  .emerald-glow {
+    box-shadow: 0 0 20px rgba(0,187,127,0.35), 0 0 40px rgba(0,187,127,0.15);
+  }
+  .emerald-glow-sm {
+    box-shadow: 0 0 10px rgba(0,187,127,0.3), 0 4px 16px rgba(0,187,127,0.2);
+  }
+
+  /* ---- Glow Pulse ---- */
+  .glow-pulse::after {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: inherit;
+    background: radial-gradient(circle, rgba(0,187,127,0.4) 0%, transparent 70%);
+    animation: pulse-glow 2s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  /* ---- Ripple Effect ---- */
+  .ripple-container { overflow: hidden; position: relative; }
+  .ripple-container::after {
+    content: '';
+    position: absolute;
+    inset: 50%;
+    width: 0; height: 0;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transform: scale(0);
+    opacity: 0;
+    transition: none;
+  }
+  .ripple-container:active::after {
+    animation: ripple 0.6s ease-out forwards;
+  }
+
+  /* ---- Frosted Badge ---- */
+  .badge-frosted {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .dark .badge-frosted {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  /* ---- Interactive Card (hover only on pointer devices) ---- */
+  @media (hover: hover) and (pointer: fine) {
+    .product-card {
+      transition:
+        transform 0.28s cubic-bezier(0.16,1,0.3,1),
+        box-shadow 0.28s cubic-bezier(0.16,1,0.3,1),
+        border-color 0.2s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-5px);
+      box-shadow:
+        0 12px 32px -8px rgba(0,151,103,0.2),
+        0 4px 12px -4px rgba(0,0,0,0.08);
+    }
+    .dark .product-card:hover {
+      box-shadow:
+        0 12px 32px -8px rgba(0,0,0,0.5),
+        0 4px 12px -4px rgba(0,0,0,0.3);
+    }
+    .category-card:hover { transform: translateY(-3px); }
+    /* Product image zoom on card hover */
+    .product-card:hover .product-img { transform: scale(1.08); }
+  }
+
+  /* Touch optimization */
+  .product-card, .category-card, .btn-base {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ---- Radial background utility (used by error/404 pages) ---- */
+  .bg-radial-emerald {
+    background: radial-gradient(ellipse at 50% 0%, rgba(0,187,127,0.12) 0%, transparent 70%);
+  }
+  .bg-radial-red {
+    background: radial-gradient(ellipse at 50% 0%, rgba(239,68,68,0.1) 0%, transparent 70%);
+  }
+
+  /* ---- Section Divider ---- */
+  .section-divider {
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ---- Text Balance ---- */
+  .text-balance  { text-wrap: balance; }
+  .text-pretty   { text-wrap: pretty; }
+
+  /* ---- Aspect Ratios ---- */
+  .aspect-product { aspect-ratio: 3 / 4; }
+  .aspect-banner  { aspect-ratio: 16 / 6; }
+  .aspect-hero    { aspect-ratio: 16 / 7; }
+
+  .no-scrollbar { scrollbar-width: none; -ms-overflow-style: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .custom-scrollbar { scrollbar-width: thin; scrollbar-color: rgba(0,187,127,0.45) transparent; }
+  .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(0,187,127,0.45); border-radius: 99px; }
+
+  /* ---- Safe Area Utilities ---- */
+  .pb-safe  { padding-bottom: env(safe-area-inset-bottom); }
+  .pt-safe  { padding-top:    env(safe-area-inset-top); }
+
+  /*
+    Container queries are wired up on the elements above (`.cq-product`, `.cq-section`,
+    `.cq-card`, `.cq-nav`). The old `@container product (...) { .cq-show-details }` pair
+    was dead — no component ever rendered that class — so it is gone rather than left
+    as a trap for the next reader.
+  */
+
+  /* ---- Keyboard-only focus ring for non-interactive card surfaces ---- */
+  .focusable-card:focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 3px;
+  }
+
+  /* Screen-reader-only, but focusable (skip links) */
+  .sr-only-focusable:not(:focus):not(:focus-within) {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /*
+    Respect the OS "reduce motion" setting.
+    `MotionConfig reducedMotion="user"` (see `MotionProvider`) only suppresses
+    *transform* animations — it leaves the infinite ambient loops (hero glows, orbiting
+    product tiles, the pulsing badge) running. Those are the most visible offenders for
+    vestibular disorders, so they are switched off here at the CSS layer as well.
+  */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* ---- Scrollable horizontal strip ---- */
+  .scroll-strip {
+    display: flex;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    gap: 0.75rem;
+  }
+  .scroll-strip::-webkit-scrollbar { display: none; }
+  .scroll-strip > * { scroll-snap-align: start; flex-shrink: 0; }
+
+  /* ---- Masonry-style grid ---- */
+  .masonry-grid {
+    columns: 2 160px;
+    column-gap: 0.75rem;
+  }
+  .masonry-grid > * {
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
+  }
+
+  /* ---- Gradient Border ---- */
+  .gradient-border {
+    position: relative;
+  }
+  .gradient-border::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: linear-gradient(135deg, #009767, #00baa7, #05df72);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: destination-out;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* ---- Noise Texture Overlay ---- */
+  .noise-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    border-radius: inherit;
+    z-index: 1;
+  }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY — REDUCED MOTION
+   Disables ALL animations/transitions for users who prefer it.
+   Individual components may still use `useReducedMotion()` from Framer Motion
+   for finer-grained control, but this CSS layer is the safety net.
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .floating,
+  .breathe,
+  .shimmer-skeleton::after,
+  .animated-gradient {
+    animation: none !important;
+  }
+}
