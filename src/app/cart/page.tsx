@@ -284,29 +284,31 @@ export default function CartPage() {
                       <button
                         type="button"
                         onClick={() => removeItem(product.id)}
-                        className="p-1.5 rounded-lg text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors cursor-pointer"
-                        title="حذف از سبد"
+                        className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-400 hover:text-red-500 dark:hover:text-red-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
+                        aria-label={`حذف ${product.title} از سبد`}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-4 h-4" aria-hidden="true" />
                       </button>
 
                       <div className="flex items-center rounded-xl border border-slate-200 dark:border-zinc-800 bg-slate-50 dark:bg-zinc-800/60 p-1">
                         <button
                           type="button"
                           onClick={() => updateQuantity(product.id, quantity - 1)}
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                          aria-label={`کاهش تعداد ${product.title}`}
+                          className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                         >
-                          <Minus className="w-3.5 h-3.5" />
+                          <Minus className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
-                        <span className="w-7 text-center text-xs font-bold text-slate-800 dark:text-zinc-100">
+                        <span className="w-7 text-center text-xs font-bold text-slate-800 dark:text-zinc-100 tabular-nums">
                           {toPersianDigits(quantity)}
                         </span>
                         <button
                           type="button"
                           onClick={() => updateQuantity(product.id, quantity + 1)}
-                          className="w-7 h-7 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                          aria-label={`افزایش تعداد ${product.title}`}
+                          className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                         >
-                          <Plus className="w-3.5 h-3.5" />
+                          <Plus className="w-3.5 h-3.5" aria-hidden="true" />
                         </button>
                       </div>
                     </div>

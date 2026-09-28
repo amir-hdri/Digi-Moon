@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useCartStore } from '@/stores/useCartStore';
+import { useHydrated } from '@/components/ui/StoreHydration';
 import { toPersianDigits } from '@/lib/persian';
 import { Home, Grid, Search, ShoppingBag, User } from 'lucide-react';
 
@@ -21,6 +22,10 @@ export const BottomNavbar: React.FC<BottomNavbarProps> = ({
 }) => {
   const pathname = usePathname();
   const cartCount = useCartStore((state) => state.getItemCount());
+  // Persisted stores rehydrate after mount — gating keeps the first client
+  // render identical to SSR so React never throws hydration error #418.
+  const hydrated = useHydrated();
+  const visibleCartCount = hydrated ? cartCount : 0;
 
   const getActiveTab = (): BottomNavTab => {
     if (controlledActiveTab) return controlledActiveTab;
@@ -39,7 +44,7 @@ export const BottomNavbar: React.FC<BottomNavbarProps> = ({
     { id: 'home'       as BottomNavTab, label: 'خانه',      href: '/',                    icon: Home },
     { id: 'categories' as BottomNavTab, label: 'دسته‌ها',    href: '/category/groceries',  icon: Grid },
     { id: 'search'     as BottomNavTab, label: 'جستجو',     href: '/search',              icon: Search },
-    { id: 'cart'       as BottomNavTab, label: 'سبد خرید',  href: '/cart',                icon: ShoppingBag, badge: cartCount },
+    { id: 'cart'       as BottomNavTab, label: 'سبد خرید',  href: '/cart',                icon: ShoppingBag, badge: visibleCartCount },
     { id: 'profile'    as BottomNavTab, label: 'پروفایل',   href: '/profile',             icon: User },
   ];
 

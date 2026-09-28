@@ -13,6 +13,7 @@ import { CategoryDrawer } from '../navigation/CategoryDrawer';
 import { CategorySubnav } from '../navigation/CategorySubnav';
 import { SearchBar } from '../ui/SearchBar';
 import { NotificationCenter } from '../notifications/NotificationCenter';
+import { useHydrated } from '../ui/StoreHydration';
 import { useMessageStore } from '@/stores/useMessageStore';
 import { useNotificationStore } from '@/stores/useNotificationStore';
 
@@ -47,6 +48,15 @@ export const Header: React.FC<HeaderProps> = ({
   const messageUnread = useMessageStore((state) =>
     state.threads.reduce((sum, thread) => sum + thread.unreadCount, 0)
   );
+  // Persisted stores rehydrate after mount — gate every persisted value so the
+  // first client render matches SSR and React never throws hydration error #418.
+  const hydrated = useHydrated();
+  const visibleCartCount = hydrated ? cartCount : 0;
+  const visibleMessageUnread = hydrated ? messageUnread : 0;
+  const visibleIsAuthenticated = hydrated && isAuthenticated;
+  const visibleFirstName = hydrated ? firstName : null;
+  const visibleAddressTitle = hydrated ? activeAddressTitle : null;
+  const visibleTheme = hydrated ? resolvedTheme : 'light';
   const fetchNotifications = useNotificationStore((state) => state.fetch);
   const fetchThreads = useMessageStore((state) => state.fetchThreads);
 
@@ -133,13 +143,13 @@ export const Header: React.FC<HeaderProps> = ({
 
               <Link
                 href="/messages"
-                aria-label={`پیام‌ها و پشتیبانی${messageUnread > 0 ? ` — ${toPersianDigits(messageUnread)} پیام خوانده‌نشده` : ''}`}
+                aria-label={`پیام‌ها و پشتیبانی${visibleMessageUnread > 0 ? ` — ${toPersianDigits(visibleMessageUnread)} پیام خوانده‌نشده` : ''}`}
                 className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hidden sm:flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
               >
                 <MessageCircle className="w-[18px] h-[18px]" aria-hidden="true" />
-                {messageUnread > 0 ? (
+                {visibleMessageUnread > 0 ? (
                   <span aria-hidden="true" className="absolute -top-1.5 -end-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center shadow-md shadow-rose-500/45 tabular-nums">
-                    {messageUnread > 99 ? '+۹۹' : toPersianDigits(messageUnread)}
+                    {visibleMessageUnread > 99 ? '+۹۹' : toPersianDigits(visibleMessageUnread)}
                   </span>
                 ) : null}
               </Link>
@@ -154,16 +164,16 @@ export const Header: React.FC<HeaderProps> = ({
                   type="button"
                   onClick={onAddressClick}
                   aria-label={
-                    activeAddressTitle
-                      ? `آدرس تحویل فعلی: ${activeAddressTitle}. برای تغییر بزنید`
+                    visibleAddressTitle
+                      ? `آدرس تحویل فعلی: ${visibleAddressTitle}. برای تغییر بزنید`
                       : 'انتخاب آدرس تحویل'
                   }
-                  title={activeAddressTitle ?? 'انتخاب آدرس تحویل'}
+                  title={visibleAddressTitle ?? 'انتخاب آدرس تحویل'}
                   className="hidden lg:flex items-center gap-1.5 min-h-[44px] h-11 px-3 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer max-w-[190px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                   <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
                   <span className="truncate">
-                    {activeAddressTitle ?? 'انتخاب آدرس'}
+                    {visibleAddressTitle ?? 'انتخاب آدرس'}
                   </span>
                 </button>
               ) : null}
@@ -175,11 +185,11 @@ export const Header: React.FC<HeaderProps> = ({
                 whileTap={hoverScale(0.9)}
                 onClick={toggleTheme}
                 className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
-                title={resolvedTheme === 'dark' ? 'تم روشن' : 'تم تاریک'}
-                aria-label={resolvedTheme === 'dark' ? 'فعال‌کردن تم روشن' : 'فعال‌کردن تم تاریک'}
+                title={visibleTheme === 'dark' ? 'تم روشن' : 'تم تاریک'}
+                aria-label={visibleTheme === 'dark' ? 'فعال‌کردن تم روشن' : 'فعال‌کردن تم تاریک'}
               >
                 <AnimatePresence mode="wait">
-                  {resolvedTheme === 'dark' ? (
+                  {visibleTheme === 'dark' ? (
                     <motion.span
                       key="sun"
                       initial={{ scale: 0, rotate: -90, opacity: 0 }}
@@ -204,13 +214,13 @@ export const Header: React.FC<HeaderProps> = ({
               </motion.button>
 
               {/* User / Login */}
-              {isAuthenticated ? (
+              {visibleIsAuthenticated ? (
                 <Link
                   href="/profile"
                   className="flex items-center gap-1.5 px-3 min-h-[44px] rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                   <User className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
-                  <span className="hidden sm:inline">{firstName ?? 'پروفایل'}</span>
+                  <span className="hidden sm:inline">{visibleFirstName ?? 'پروفایل'}</span>
                 </Link>
               ) : (
                 <motion.button
@@ -230,14 +240,14 @@ export const Header: React.FC<HeaderProps> = ({
                 href="/cart"
                 className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center hover:from-emerald-500 hover:to-emerald-600 shadow-md shadow-emerald-600/30 dark:shadow-emerald-700/40 active:scale-95 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1"
                 aria-label={
-                  cartCount > 0 ? `سبد خرید، ${toPersianDigits(cartCount)} کالا` : 'سبد خرید، خالی'
+                  visibleCartCount > 0 ? `سبد خرید، ${toPersianDigits(visibleCartCount)} کالا` : 'سبد خرید، خالی'
                 }
               >
                 <ShoppingCart className="w-[18px] h-[18px]" aria-hidden="true" />
                 <AnimatePresence>
-                  {cartCount > 0 ? (
+                  {visibleCartCount > 0 ? (
                     <motion.span
-                      key={cartCount}
+                      key={visibleCartCount}
                       initial={{ scale: 0.4, opacity: 0 }}
                       animate={{ scale: 1, opacity: 1 }}
                       exit={{ scale: 0.4, opacity: 0 }}
@@ -245,7 +255,7 @@ export const Header: React.FC<HeaderProps> = ({
                       className="absolute -top-1.5 -end-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-orange-500 text-white text-[10px] font-black flex items-center justify-center shadow-md shadow-orange-500/45 select-none tabular-nums"
                       aria-hidden
                     >
-                      {cartCount > 99 ? '+۹۹' : toPersianDigits(cartCount)}
+                      {visibleCartCount > 99 ? '+۹۹' : toPersianDigits(visibleCartCount)}
                     </motion.span>
                   ) : null}
                 </AnimatePresence>

@@ -7,6 +7,7 @@ import { Bell, CheckCheck, Info, MessageCircle, ShoppingBag, Sparkles, X } from 
 import { useNotificationStore, type NotificationFilter } from '@/stores/useNotificationStore';
 import { useShallow } from 'zustand/react/shallow';
 import { timeAgoFa, toPersianDigits } from '@/lib/persian';
+import { useHydrated } from '@/components/ui/StoreHydration';
 import type { NotificationType } from '@/types';
 
 const TYPE_META: Record<NotificationType, { label: string; icon: typeof Bell; classes: string }> = {
@@ -60,6 +61,9 @@ export const NotificationCenter: React.FC = () => {
   const fetch = useNotificationStore((s) => s.fetch);
   const markRead = useNotificationStore((s) => s.markRead);
   const markAllRead = useNotificationStore((s) => s.markAllRead);
+  // Gate persisted count so first client render matches SSR (hydration #418).
+  const hydrated = useHydrated();
+  const visibleUnreadCount = hydrated ? unreadCount : 0;
 
   useEffect(() => {
     void fetch();
@@ -88,23 +92,23 @@ export const NotificationCenter: React.FC = () => {
         type="button"
         whileTap={{ scale: 0.9 }}
         onClick={() => setOpen((prev) => !prev)}
-        aria-label={unreadCount > 0 ? `مرکز اعلان‌ها، ${toPersianDigits(unreadCount)} خوانده‌نشده` : 'مرکز اعلان‌ها'}
+        aria-label={visibleUnreadCount > 0 ? `مرکز اعلان‌ها، ${toPersianDigits(visibleUnreadCount)} خوانده‌نشده` : 'مرکز اعلان‌ها'}
         aria-expanded={open}
         aria-haspopup="dialog"
         className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
       >
         <Bell className="w-[18px] h-[18px]" aria-hidden="true" />
         <AnimatePresence>
-          {unreadCount > 0 && (
+          {visibleUnreadCount > 0 && (
             <motion.span
-              key={unreadCount}
+              key={visibleUnreadCount}
               aria-hidden="true"
               initial={{ scale: 0.4, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.4, opacity: 0 }}
               className="absolute -top-1.5 -end-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center shadow-md shadow-rose-500/45 tabular-nums"
             >
-              {unreadCount > 99 ? '+۹۹' : toPersianDigits(unreadCount)}
+              {visibleUnreadCount > 99 ? '+۹۹' : toPersianDigits(visibleUnreadCount)}
             </motion.span>
           )}
         </AnimatePresence>

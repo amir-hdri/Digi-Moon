@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useRef } from 'react';
-import { useInView, useMotionValue, useSpring } from 'framer-motion';
+import { useInView, useMotionValue, useReducedMotion, useSpring } from 'framer-motion';
 import { toPersianDigits } from '@/lib/persian';
 
 export interface AnimatedCounterProps {
@@ -24,6 +24,7 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   decimals = 0,
 }) => {
   const ref = useRef<HTMLSpanElement>(null);
+  const reduceMotion = useReducedMotion();
   const motionValue = useMotionValue(from);
   const springValue = useSpring(motionValue, {
     damping: 35,
@@ -33,10 +34,19 @@ export const AnimatedCounter: React.FC<AnimatedCounterProps> = ({
   const isInView = useInView(ref, { once: true, margin: '-50px' });
 
   useEffect(() => {
-    if (isInView) {
-      motionValue.set(to);
+    if (!isInView) return;
+    if (reduceMotion) {
+      // No animation — jump straight to the final formatted value so the
+      // stat is never stuck at zero for reduced-motion users.
+      if (ref.current) {
+        const final =
+          decimals > 0 ? to.toFixed(decimals) : to.toLocaleString('fa-IR');
+        ref.current.textContent = `${prefix}${toPersianDigits(final)}${suffix}`;
+      }
+      return;
     }
-  }, [isInView, motionValue, to]);
+    motionValue.set(to);
+  }, [isInView, motionValue, to, reduceMotion, prefix, suffix, decimals]);
 
   useEffect(() => {
     const unsubscribe = springValue.on('change', (latest) => {

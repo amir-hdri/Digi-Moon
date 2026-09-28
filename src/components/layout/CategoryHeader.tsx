@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { useCartStore } from '@/stores/useCartStore';
 import { toPersianDigits } from '@/lib/persian';
 import { ArrowRight, ShoppingBag, Search } from 'lucide-react';
+import { useHydrated } from '@/components/ui/StoreHydration';
 
 export interface CategoryHeaderProps {
   title?: string;
@@ -32,7 +33,10 @@ export const CategoryHeader: React.FC<CategoryHeaderProps> = ({
 }) => {
   const router = useRouter();
   const storeCartCount = useCartStore((state) => state.getItemCount());
-  const cartCount = controlledCartCount !== undefined ? controlledCartCount : storeCartCount;
+  // Gate persisted count so first client render matches SSR (hydration #418).
+  const hydrated = useHydrated();
+  const rawCount = controlledCartCount !== undefined ? controlledCartCount : storeCartCount;
+  const cartCount = hydrated ? rawCount : 0;
 
   const handleBack = () => {
     if (onBack) {

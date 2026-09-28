@@ -186,6 +186,11 @@ export const useCartStore = create<CartStoreState>()(
       name: 'dijimoon_cart',
       version: 2,
       storage: clientStorage<CartPersistedState>(),
+      // Every other persisted store sets this — without it the cart rehydrates
+      // synchronously on creation, so the first client render (badge counts,
+      // cart page) disagrees with SSR and React throws hydration error #418.
+      // StoreHydration rehydrates all stores once, after mount.
+      skipHydration: true,
       partialize: (state) => ({
         items: state.items.map((item) => ({
           productId: String(item.product.id),
