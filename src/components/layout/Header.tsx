@@ -107,12 +107,16 @@ export const Header: React.FC<HeaderProps> = ({
                 <Menu className="w-[18px] h-[18px]" aria-hidden="true" />
               </motion.button>
 
-              <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0 group">
+              <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0 group min-h-[44px]">
                 <motion.div
                   whileHover={reduceMotion ? undefined : { scale: 1.06, rotate: -2 }}
                   whileTap={hoverScale(0.94)}
                   transition={{ type: 'spring', stiffness: 420, damping: 22 }}
                   className="rounded-xl overflow-hidden flex items-center justify-center"
+                  /* The parent link already owns keyboard activation — keep this
+                     decorative motion wrapper out of the tab order. */
+                  tabIndex={-1}
+                  aria-hidden="true"
                 >
                   <MoonMarketLogo size="sm" priority />
                 </motion.div>
@@ -228,7 +232,8 @@ export const Header: React.FC<HeaderProps> = ({
                   whileHover={hoverScale(1.03)}
                   whileTap={hoverScale(0.95)}
                   onClick={onLoginClick}
-                  className="flex items-center gap-1.5 px-3 min-h-[44px] rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                  aria-label="ورود به حساب کاربری"
+                  className="flex items-center justify-center gap-1.5 px-3 min-h-[44px] min-w-[44px] rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                   <User className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span className="hidden xs:inline">ورود</span>
