@@ -82,7 +82,7 @@ export function Footer() {
               </div>
             </div>
 
-            <p className="leading-relaxed text-slate-500 dark:text-zinc-500 text-[12px]">
+            <p className="leading-relaxed text-slate-500 dark:text-zinc-500 text-xs">
               مرجع تخصصی خرید آنلاین کالاهای اساسی، لبنیات تازه، محصولات آرایشی‌بهداشتی و شوینده‌های معتبر با تضمین ۱۰۰٪ اصالت و قیمت مصوب.
             </p>
 
@@ -180,7 +180,7 @@ export function Footer() {
                     <Icon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
                   </div>
                   <span className="font-bold text-[11px] text-slate-800 dark:text-zinc-200 leading-tight">{title}</span>
-                  <span className="text-[9.5px] text-slate-400 dark:text-zinc-500 leading-tight">{sub}</span>
+                  <span className="text-[10px] text-slate-400 dark:text-zinc-500 leading-tight">{sub}</span>
                 </div>
               ))}
             </div>

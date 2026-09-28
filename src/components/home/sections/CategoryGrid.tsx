@@ -45,7 +45,7 @@ function CategoryCard({
         }`}
       >
         {node.badge ? (
-          <span className="text-[8px] sm:text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold leading-none border border-emerald-500/20">
+          <span className="text-[9px] sm:text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold leading-none border border-emerald-500/20">
             {node.badge}
           </span>
         ) : (

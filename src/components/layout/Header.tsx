@@ -109,11 +109,11 @@ export const Header: React.FC<HeaderProps> = ({
                     <span className="text-base sm:text-lg font-black text-slate-900 dark:text-zinc-100 whitespace-nowrap tracking-tight">
                       مون مارکت
                     </span>
-                    <span className="hidden xs:block text-[8.5px] sm:text-[9.5px] px-1.5 py-0.5 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 font-black shrink-0 border border-rose-500/20 leading-none">
+                    <span className="hidden xs:block text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded-md bg-rose-500/10 text-rose-600 dark:text-rose-400 font-black shrink-0 border border-rose-500/20 leading-none">
                       رسمی
                     </span>
                   </div>
-                  <span className="hidden sm:block text-[9.5px] text-slate-500 dark:text-zinc-400 font-medium whitespace-nowrap">
+                  <span className="hidden sm:block text-[10px] text-slate-500 dark:text-zinc-400 font-medium whitespace-nowrap">
                     سوپرمارکت زنجیره‌ای و آرایشی‌بهداشتی
                   </span>
                 </div>

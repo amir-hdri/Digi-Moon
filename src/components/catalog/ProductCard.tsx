@@ -330,7 +330,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                 >
                   {toPersianDigits(cartQty)}
                 </motion.span>
-                <span className="text-[8px] text-slate-400 dark:text-zinc-500 font-medium hidden sm:block leading-none -mt-0.5" aria-hidden="true">
+                <span className="text-[9px] text-slate-400 dark:text-zinc-500 font-medium hidden sm:block leading-none -mt-0.5" aria-hidden="true">
                   در سبد
                 </span>
               </div>

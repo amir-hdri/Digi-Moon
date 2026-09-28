@@ -131,7 +131,7 @@ export const CategorySubnav: React.FC<CategorySubnavProps> = ({
             >
               <Sparkles className="w-3.5 h-3.5 text-pink-500" aria-hidden="true" />
               <span>آرایشی و بهداشتی</span>
-              <span className="text-[8px] px-1 py-0.5 rounded bg-pink-500/15 text-pink-600 dark:text-pink-400 font-bold leading-none">
+              <span className="text-[9px] px-1 py-0.5 rounded bg-pink-500/15 text-pink-600 dark:text-pink-400 font-bold leading-none">
                 ویژه
               </span>
             </Link>
