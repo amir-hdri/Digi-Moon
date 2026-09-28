@@ -9,6 +9,8 @@ export interface MoonMarketLogoProps {
   className?: string;
   isAnimated?: boolean;
   glow?: boolean;
+  /** Preload when the mark is above the fold (e.g. the header logo). */
+  priority?: boolean;
 }
 
 const sizeMap = {
@@ -26,6 +28,7 @@ export const MoonMarketLogo: React.FC<MoonMarketLogoProps> = ({
   className = '',
   isAnimated = false,
   glow = false,
+  priority = false,
 }) => {
   const dims = sizeMap[size];
 
@@ -53,8 +56,12 @@ export const MoonMarketLogo: React.FC<MoonMarketLogoProps> = ({
         width={dims.width}
         height={dims.height}
         unoptimized
+        priority={priority}
         className="object-contain"
         draggable={false}
+        /* Preflight forces `height:auto`; pin both axes so the intrinsic SVG
+           ratio cannot stretch the box (and trip next/image's aspect warning). */
+        style={{ width: dims.width, height: dims.height }}
       />
     </Wrapper>
   );

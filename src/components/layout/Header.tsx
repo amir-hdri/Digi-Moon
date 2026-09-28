@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
                   transition={{ type: 'spring', stiffness: 420, damping: 22 }}
                   className="rounded-xl overflow-hidden flex items-center justify-center"
                 >
-                  <MoonMarketLogo size="sm" />
+                  <MoonMarketLogo size="sm" priority />
                 </motion.div>
                 <div className="text-right flex flex-col justify-center leading-tight">
                   <div className="flex items-center gap-1.5">
@@ -231,7 +231,7 @@ export const Header: React.FC<HeaderProps> = ({
                   className="flex items-center gap-1.5 px-3 min-h-[44px] rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                   <User className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
-                  <span>ورود</span>
+                  <span className="hidden xs:inline">ورود</span>
                 </motion.button>
               )}
 
