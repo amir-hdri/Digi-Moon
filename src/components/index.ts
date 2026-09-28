@@ -11,6 +11,8 @@ export * from './ui/UniversalModal';
 export * from './ui/AnimatedSplashScreen';
 export * from './ui/DailyMarketLogo';
 export * from './ui/MoonMarketLogo';
+export * from './ui/DigiMoonAnimatedLogo';
+export * from './ui/BrandRouteLoader';
 export * from './navigation/MegaMenu';
 export * from './navigation/CategoryDrawer';
 export * from './navigation/CategorySubnav';

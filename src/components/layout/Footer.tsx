@@ -127,42 +127,82 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Customer Service */}
-          <div className="md:col-span-2 space-y-3.5">
-            <h2 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
-              خدمات مشتریان
-            </h2>
-            <ul className="space-y-2.5">
-              {footerLinks.service.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors hover:translate-x-[-2px] inline-block duration-150"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Customer Service — accordion on mobile, open list on desktop */}
+          <div className="md:col-span-2">
+            <details className="md:hidden group rounded-2xl border border-slate-200/70 dark:border-zinc-800 px-4">
+              <summary className="flex items-center justify-between min-h-[44px] py-2 font-bold text-slate-800 dark:text-zinc-100 text-sm cursor-pointer list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg">
+                خدمات مشتریان
+                <span aria-hidden="true" className="text-slate-400 group-open:rotate-180 transition-transform">▾</span>
+              </summary>
+              <ul className="pb-3 space-y-2.5">
+                {footerLinks.service.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="inline-block min-h-[44px] py-2 text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+            <div className="hidden md:block space-y-3.5">
+              <h2 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
+                خدمات مشتریان
+              </h2>
+              <ul className="space-y-2.5">
+                {footerLinks.service.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors hover:translate-x-[-2px] inline-block duration-150"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* Shopping Guide */}
-          <div className="md:col-span-2 space-y-3.5">
-            <h2 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
-              راهنمای خرید
-            </h2>
-            <ul className="space-y-2.5">
-              {footerLinks.guide.map((link) => (
-                <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors hover:translate-x-[-2px] inline-block duration-150"
-                  >
-                    {link.label}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          {/* Shopping Guide — accordion on mobile, open list on desktop */}
+          <div className="md:col-span-2">
+            <details className="md:hidden group rounded-2xl border border-slate-200/70 dark:border-zinc-800 px-4">
+              <summary className="flex items-center justify-between min-h-[44px] py-2 font-bold text-slate-800 dark:text-zinc-100 text-sm cursor-pointer list-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg">
+                راهنمای خرید
+                <span aria-hidden="true" className="text-slate-400 group-open:rotate-180 transition-transform">▾</span>
+              </summary>
+              <ul className="pb-3 space-y-2.5">
+                {footerLinks.guide.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="inline-block min-h-[44px] py-2 text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </details>
+            <div className="hidden md:block space-y-3.5">
+              <h2 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
+                راهنمای خرید
+              </h2>
+              <ul className="space-y-2.5">
+                {footerLinks.guide.map((link) => (
+                  <li key={link.label}>
+                    <a
+                      href={link.href}
+                      className="text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors hover:translate-x-[-2px] inline-block duration-150"
+                    >
+                      {link.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           {/* Trust Badges */}

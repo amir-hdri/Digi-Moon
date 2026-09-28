@@ -254,6 +254,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </span>
         </h3>
 
+        {product.unit ? (
+          <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-medium mb-1 leading-none">
+            {product.unit}
+          </p>
+        ) : null}
+
         {product.rating ? (
           <div className="flex items-center gap-1 text-[11px] sm:text-xs text-amber-500 font-bold justify-start mb-1.5" role="img" aria-label={`امتیاز ${toPersianDigits(product.rating)} از ۵${product.reviewsCount ? `، ${toPersianDigits(product.reviewsCount)} دیدگاه` : ''}`}>
             <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />

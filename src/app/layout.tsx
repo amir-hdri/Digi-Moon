@@ -80,9 +80,32 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://moonmarket.ir';
+  const orgJsonLd = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Organization',
+        name: 'مون مارکت',
+        alternateName: 'Moon Market',
+        url: siteUrl,
+        logo: `${siteUrl}/logo-moonmarket.png`,
+      },
+      {
+        '@type': 'WebSite',
+        name: 'مون مارکت',
+        url: siteUrl,
+        inLanguage: 'fa-IR',
+      },
+    ],
+  };
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
+        />
         {/*
           Anti-FOUC theme bootstrap — runs synchronously before first paint.
           zustand/persist wraps state in a `{ state, version }` JSON envelope, so the

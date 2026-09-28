@@ -114,13 +114,13 @@ export function CatalogSection({
           {SORT_OPTIONS.map((option) => {
             const isActive = sort === option.id;
             return (
-              <button
-                key={option.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                onClick={() => onSort(option.id)}
-                className={`relative z-10 px-3.5 py-2 min-h-[36px] rounded-xl transition-colors shrink-0 ${
+                <button
+                  key={option.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={isActive}
+                  onClick={() => onSort(option.id)}
+                  className={`relative z-10 px-3.5 py-2 min-h-[44px] rounded-xl transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                   isActive
                     ? 'text-emerald-600 dark:text-emerald-400 font-bold'
                     : 'text-slate-600 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'

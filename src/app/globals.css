@@ -137,6 +137,8 @@
   --animate-scale-in:     scale-in 0.35s cubic-bezier(0.16,1,0.3,1) both;
   --animate-scale-check:  scale-check 0.45s cubic-bezier(0.16,1,0.3,1) both;
   --animate-fade-in:      fade-in 0.3s ease-out both;
+  --animate-comet-orbit:  comet-orbit 3.6s linear infinite;
+  --animate-shimmer-rtl:  rtl-shimmer 1.6s ease-in-out infinite;
 }
 
 /* ==========================================================================
@@ -146,6 +148,18 @@
 @keyframes spin-reverse {
   from { transform: rotate(360deg); }
   to   { transform: rotate(0deg); }
+}
+
+/* Travelling comet segment along an SVG ellipse with pathLength="1" */
+@keyframes comet-orbit {
+  from { stroke-dashoffset: 0; }
+  to   { stroke-dashoffset: -1; }
+}
+
+/* RTL shimmer: highlight sweeps right-to-left, following Persian reading order */
+@keyframes rtl-shimmer {
+  from { transform: translateX(100%); }
+  to   { transform: translateX(-100%); }
 }
 
 @keyframes sonar-wave {
@@ -659,17 +673,6 @@
     product tiles, the pulsing badge) running. Those are the most visible offenders for
     vestibular disorders, so they are switched off here at the CSS layer as well.
   */
-  @media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-      animation-duration: 0.01ms !important;
-      animation-iteration-count: 1 !important;
-      transition-duration: 0.01ms !important;
-      scroll-behavior: auto !important;
-    }
-  }
-
   /* ---- Scrollable horizontal strip ---- */
   .scroll-strip {
     display: flex;

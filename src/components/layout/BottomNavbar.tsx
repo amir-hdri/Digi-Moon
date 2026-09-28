@@ -6,9 +6,9 @@ import { usePathname } from 'next/navigation';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { useCartStore } from '@/stores/useCartStore';
 import { toPersianDigits } from '@/lib/persian';
-import { Home, Grid, ShoppingBag, User } from 'lucide-react';
+import { Home, Grid, Search, ShoppingBag, User } from 'lucide-react';
 
-export type BottomNavTab = 'home' | 'categories' | 'cart' | 'profile';
+export type BottomNavTab = 'home' | 'categories' | 'search' | 'cart' | 'profile';
 
 export interface BottomNavbarProps {
   activeTab?: BottomNavTab;
@@ -26,6 +26,7 @@ export const BottomNavbar: React.FC<BottomNavbarProps> = ({
     if (controlledActiveTab) return controlledActiveTab;
     if (pathname === '/') return 'home';
     if (pathname.startsWith('/category') || pathname.startsWith('/categories')) return 'categories';
+    if (pathname.startsWith('/search')) return 'search';
     if (pathname.startsWith('/cart')) return 'cart';
     if (pathname.startsWith('/profile')) return 'profile';
     return 'home';
@@ -37,6 +38,7 @@ export const BottomNavbar: React.FC<BottomNavbarProps> = ({
   const tabs = [
     { id: 'home'       as BottomNavTab, label: 'خانه',      href: '/',                    icon: Home },
     { id: 'categories' as BottomNavTab, label: 'دسته‌ها',    href: '/category/groceries',  icon: Grid },
+    { id: 'search'     as BottomNavTab, label: 'جستجو',     href: '/search',              icon: Search },
     { id: 'cart'       as BottomNavTab, label: 'سبد خرید',  href: '/cart',                icon: ShoppingBag, badge: cartCount },
     { id: 'profile'    as BottomNavTab, label: 'پروفایل',   href: '/profile',             icon: User },
   ];

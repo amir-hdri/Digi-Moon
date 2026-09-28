@@ -280,19 +280,21 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                    aria-label="کاهش تعداد"
+                    className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   >
-                    -
+                    <span aria-hidden="true">−</span>
                   </button>
-                  <span className="w-8 text-center text-xs font-bold text-slate-800 dark:text-zinc-100">
+                  <span className="w-8 text-center text-xs font-bold text-slate-800 dark:text-zinc-100 tabular-nums">
                     {toPersianDigits(quantity)}
                   </span>
                   <button
                     type="button"
                     onClick={() => setQuantity((q) => q + 1)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                    aria-label="افزایش تعداد"
+                    className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg flex items-center justify-center text-slate-600 dark:text-zinc-300 hover:bg-white dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   >
-                    +
+                    <span aria-hidden="true">+</span>
                   </button>
                 </div>
 
@@ -403,6 +405,34 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           </button>
         </div>
       </div>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Product',
+            name: product.title,
+            image: product.imageUrl || undefined,
+            ...(product.rating
+              ? {
+                  aggregateRating: {
+                    '@type': 'AggregateRating',
+                    ratingValue: product.rating,
+                    reviewCount: product.reviewsCount ?? 1,
+                  },
+                }
+              : {}),
+            offers: {
+              '@type': 'Offer',
+              priceCurrency: 'IRT',
+              price: product.price,
+              availability: product.inStock
+                ? 'https://schema.org/InStock'
+                : 'https://schema.org/OutOfStock',
+            },
+          }),
+        }}
+      />
     </main>
   );
 }

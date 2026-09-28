@@ -34,7 +34,7 @@ export function BrandChips({
       <SectionHeading
         id="brands-heading"
         icon={<Layers className="w-4 h-4" />}
-        title="برندهای معتبر مواد غذایی و بهداشتی"
+        title="برندهای محبوب"
         subtitle={`${toPersianDigits(brands.length)} برند فعال در کاتالوگ`}
         action={
           selectedBrand ? (

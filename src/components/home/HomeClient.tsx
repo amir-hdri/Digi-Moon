@@ -8,8 +8,10 @@ import { LoginModal } from '@/components/auth/LoginModal';
 import { AddressModal } from '@/components/address/AddressModal';
 import { AnimatedSplashScreen } from '@/components/ui/AnimatedSplashScreen';
 import { HomeHero } from '@/components/home/sections/HomeHero';
+import { BenefitsStrip } from '@/components/home/sections/BenefitsStrip';
 import { BrandChips } from '@/components/home/sections/BrandChips';
 import { CategoryGrid } from '@/components/home/sections/CategoryGrid';
+import { ShopByNeed } from '@/components/home/sections/ShopByNeed';
 import { FestivalDeals } from '@/components/home/sections/FestivalDeals';
 import { CatalogSection } from '@/components/home/sections/CatalogSection';
 import { TrustStats } from '@/components/home/sections/TrustStats';
@@ -92,9 +94,13 @@ export function HomeClient({ footer }: { footer: React.ReactNode }) {
 
         <HomeHero />
 
+        <BenefitsStrip />
+
         <BrandChips selectedBrand={brand} onSelect={setBrand} />
 
         <CategoryGrid selectedCategory={categoryId} onSelect={setCategoryId} />
+
+        <ShopByNeed />
 
         <FestivalDeals onAddToCart={handleAddToCart} />
 
