@@ -71,12 +71,19 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
 
           <motion.div
             ref={panelRef}
+            id="category-drawer"
             tabIndex={-1}
             initial={reduceMotion ? false : { x: '100%' }}
             animate={reduceMotion ? undefined : { x: 0 }}
             exit={reduceMotion ? undefined : { x: '100%' }}
             transition={reduceMotion ? { duration: 0 } : { type: 'spring', damping: 28, stiffness: 300 }}
-            className="relative w-[340px] max-w-[85vw] h-full bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 shadow-2xl flex flex-col z-10 text-right select-none"
+            drag={reduceMotion ? false : 'x'}
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.12}
+            onDragEnd={(_, info) => {
+              if (info.offset.x > 90) onClose();
+            }}
+            className="relative w-[340px] max-w-[90vw] h-full bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 shadow-2xl flex flex-col z-10 text-right select-none touch-pan-y"
           >
             <div className="p-4 border-b border-slate-200/80 dark:border-zinc-800 flex items-center justify-between">
               <div className="flex items-center gap-2.5">

@@ -91,6 +91,8 @@ export const Header: React.FC<HeaderProps> = ({
                 onClick={() => setIsDrawerOpen(true)}
                 className="md:hidden min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 aria-label="باز کردن منوی دسته‌بندی"
+                aria-controls="category-drawer"
+                aria-expanded={isDrawerOpen}
               >
                 <Menu className="w-[18px] h-[18px]" aria-hidden="true" />
               </motion.button>
@@ -250,6 +252,11 @@ export const Header: React.FC<HeaderProps> = ({
               </Link>
             </div>
           </div>
+        </div>
+
+        {/* Mobile search row — second header row under 768px */}
+        <div className="md:hidden max-w-7xl mx-auto px-3 pb-2.5">
+          <SearchBar />
         </div>
 
         {/* Category Subnav */}

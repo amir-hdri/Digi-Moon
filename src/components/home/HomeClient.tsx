@@ -85,9 +85,12 @@ export function HomeClient({ footer }: { footer: React.ReactNode }) {
       />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-5 space-y-10">
-        <SearchBar value={query} onChange={setQuery} onClear={() => setQuery('')} />
+        {/* Inline catalog filter — desktop only; mobile uses the header search row */}
+        <div className="hidden md:block">
+          <SearchBar value={query} onChange={setQuery} onClear={() => setQuery('')} />
+        </div>
 
-        <HomeHero onWatchPromo={() => setShowSplash(true)} />
+        <HomeHero />
 
         <BrandChips selectedBrand={brand} onSelect={setBrand} />
 
