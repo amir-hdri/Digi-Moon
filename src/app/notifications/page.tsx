@@ -92,7 +92,7 @@ export default function NotificationsPage() {
         </div>
 
         {loading && items.length === 0 ? (
-          <p className="py-16 text-center text-xs text-slate-400">در حال دریافت اعلان‌ها...</p>
+          <p className="py-16 text-center text-xs text-slate-400">در حال دریافت اعلان‌ها…</p>
         ) : items.length === 0 ? (
           <div className="text-center py-20 p-6 rounded-3xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/80 dark:border-zinc-800">
             <Bell className="w-12 h-12 text-slate-300 dark:text-zinc-600 mx-auto mb-3" />
@@ -133,7 +133,7 @@ export default function NotificationsPage() {
                   </span>
                 </>
               );
-              const classes = `w-full flex items-start gap-3 p-4 rounded-2xl border text-right transition-all cursor-pointer ${
+              const classes = `w-full flex items-start gap-3 p-4 rounded-2xl border text-right transition-colors cursor-pointer ${
                 item.read
                   ? 'bg-white dark:bg-zinc-900 border-slate-200/80 dark:border-zinc-800'
                   : 'bg-emerald-500/[0.05] border-emerald-500/25 dark:border-emerald-500/20'

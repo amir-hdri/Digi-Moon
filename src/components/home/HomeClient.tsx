@@ -41,7 +41,7 @@ export function HomeClient({ footer }: { footer: React.ReactNode }) {
       if (!seen) window.sessionStorage.setItem(SPLASH_KEY, 'true');
     } catch {
       // sessionStorage blocked (private mode / strict cookie settings). Skipping the
-      // splash is better than replaying a 2.8 s animation on every navigation.
+      // splash is better than replaying a 3.6 s animation on every navigation.
       seen = true;
     }
     setShowSplash(!seen);
@@ -71,10 +71,10 @@ export function HomeClient({ footer }: { footer: React.ReactNode }) {
   return (
     <main className="min-h-screen pb-24 md:pb-12 transition-colors duration-300">
       {showSplash ? (
-        <AnimatedSplashScreen onComplete={() => setShowSplash(false)} durationMs={2200} />
+        <AnimatedSplashScreen onComplete={() => setShowSplash(false)} durationMs={3600} />
       ) : null}
 
-      <a href="#catalog" className="sr-only-focusable absolute top-2 z-50 px-4 py-2 rounded-xl bg-emerald-600 text-white text-xs font-bold">
+      <a href="#catalog" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:z-50 px-4 py-2 min-h-[44px] inline-flex items-center rounded-xl bg-emerald-600 text-white text-xs font-bold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400">
         رفتن به لیست کالاها
       </a>
 
@@ -95,7 +95,7 @@ export function HomeClient({ footer }: { footer: React.ReactNode }) {
 
         <FestivalDeals onAddToCart={handleAddToCart} />
 
-        <div id="catalog">
+        <div id="catalog" tabIndex={-1} className="scroll-mt-24 focus-visible:outline-none">
           <CatalogSection
             products={products}
             query={query}

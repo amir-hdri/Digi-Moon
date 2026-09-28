@@ -59,16 +59,14 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
           aria-modal="true"
           aria-label="منوی دسته‌بندی و ناوبری مون مارکت"
         >
-          <motion.button
-            type="button"
-            tabIndex={-1}
-            aria-label="بستن منو"
+          <motion.div
+            aria-hidden="true"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.25 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm cursor-default"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm"
           />
 
           <motion.div
@@ -94,10 +92,10 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer shrink-0"
-                aria-label="بستن منو"
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-300 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+                aria-label="بستن منوی دسته‌بندی"
               >
-                <X className="w-4 h-4" />
+                <X className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
 
@@ -108,26 +106,31 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
                 sides of an RTL input.
               */}
               <div className="relative">
+                <label htmlFor="drawer-category-search" className="sr-only">جستجوی دسته‌بندی</label>
                 <input
-                  type="text"
+                  id="drawer-category-search"
+                  type="search"
+                  autoComplete="off"
+                  inputMode="search"
+                  spellCheck={false}
                   value={filterQuery}
                   onChange={(e) => setFilterQuery(e.target.value)}
-                  placeholder="جستجوی دسته یا کالا..."
+                  placeholder="جستجوی دسته یا کالا…"
                   aria-label="جستجوی دسته‌بندی"
-                  className="w-full h-10 ps-9 pe-9 rounded-xl bg-slate-100/80 dark:bg-zinc-800/80 border border-transparent focus:border-emerald-500 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-hidden transition-all"
+                  className="w-full h-11 ps-9 pe-12 rounded-xl bg-slate-100/80 dark:bg-zinc-800/80 border border-transparent focus:border-emerald-500 text-sm text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 transition-colors"
                 />
                 <Search
-                  className="w-4 h-4 text-slate-400 absolute inset-y-0 end-3 my-auto pointer-events-none"
-                  aria-hidden
+                  className="w-4 h-4 text-slate-400 absolute inset-y-0 end-3.5 my-auto pointer-events-none"
+                  aria-hidden="true"
                 />
                 {filterQuery ? (
                   <button
                     type="button"
                     onClick={() => setFilterQuery('')}
                     aria-label="پاک کردن جستجو"
-                    className="absolute inset-y-0 start-2 my-auto h-7 w-7 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 dark:hover:bg-zinc-700 flex items-center justify-center"
+                    className="absolute inset-y-0 start-1.5 my-auto min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-200 dark:hover:bg-zinc-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   >
-                    <X className="w-3.5 h-3.5" />
+                    <X className="w-3.5 h-3.5" aria-hidden="true" />
                   </button>
                 ) : null}
               </div>
@@ -157,7 +160,8 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
                       type="button"
                       onClick={() => toggleCategory(cat.id)}
                       aria-expanded={isExpanded}
-                      className={`w-full flex items-center justify-between p-3 text-xs font-bold transition-colors cursor-pointer ${
+                      aria-controls={`drawer-cat-${cat.id}`}
+                      className={`w-full min-h-[44px] flex items-center justify-between p-3 text-xs font-bold transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 ${
                         isExpanded
                           ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
                           : 'text-slate-800 dark:text-zinc-200 hover:bg-slate-100/60 dark:hover:bg-zinc-800/50'
@@ -165,6 +169,7 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
                     >
                       <span className="flex items-center gap-2.5 min-w-0">
                         <span
+                          aria-hidden="true"
                           className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
                             isExpanded
                               ? 'bg-emerald-600 text-white'
@@ -186,10 +191,10 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
                           </span>
                         ) : null}
                         <ChevronDown
+                          aria-hidden="true"
                           className={`w-4 h-4 text-slate-400 transition-transform duration-200 ${
                             isExpanded ? 'rotate-180 text-emerald-600 dark:text-emerald-400' : ''
                           }`}
-                          aria-hidden
                         />
                       </span>
                     </button>
@@ -197,6 +202,7 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
                     <AnimatePresence initial={false}>
                       {isExpanded ? (
                         <motion.div
+                          id={`drawer-cat-${cat.id}`}
                           initial={reduceMotion ? false : { height: 0, opacity: 0 }}
                           animate={reduceMotion ? undefined : { height: 'auto', opacity: 1 }}
                           exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
@@ -209,19 +215,19 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
                               onSelectCategory?.(cat.id);
                               onClose();
                             }}
-                            className="flex items-center justify-between py-2 px-2 rounded-lg text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 transition-colors"
+                            className="flex items-center justify-between min-h-[44px] py-2 px-2 rounded-lg text-emerald-600 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 hover:bg-emerald-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                           >
                             <span>مشاهده همه محصولات {cat.title}</span>
-                            <ChevronLeft className="w-3.5 h-3.5" aria-hidden />
+                            <ChevronLeft className="w-3.5 h-3.5" aria-hidden="true" />
                           </Link>
 
-                          <div className="space-y-1.5 ps-2">
+                          <div className="space-y-1 ps-2">
                             {(cat.children ?? []).map((sub) => (
                               <Link
                                 key={sub.id}
                                 href={`/category/${sub.slug}`}
                                 onClick={onClose}
-                                className="block py-1.5 text-slate-700 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold"
+                                className="block min-h-[44px] flex items-center py-2 text-slate-700 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg px-1"
                               >
                                 {sub.title}
                               </Link>
@@ -239,7 +245,7 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
               <Link
                 href="/#festival-deals"
                 onClick={onClose}
-                className="flex items-center justify-between p-2.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-500/15 transition-colors"
+                className="flex items-center justify-between min-h-[44px] p-2.5 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 font-bold hover:bg-rose-500/15 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400"
               >
                 <span className="flex items-center gap-2">
                   <Flame className="w-4 h-4 fill-rose-500 text-rose-500" aria-hidden />
@@ -258,17 +264,18 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
                 <Link
                   href="/branches"
                   onClick={onClose}
-                  className="flex items-center gap-1.5 p-2.5 min-h-[40px] rounded-xl bg-white dark:bg-zinc-800 border border-slate-200/80 dark:border-zinc-700 hover:border-emerald-300 transition-colors"
+                  className="flex items-center gap-1.5 p-2.5 min-h-[44px] rounded-xl bg-white dark:bg-zinc-800 border border-slate-200/80 dark:border-zinc-700 hover:border-emerald-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
-                  <Store className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden />
+                  <Store className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
                   <span className="truncate font-medium">شعبات مون مارکت</span>
                 </Link>
                 <a
                   href="tel:+98910098000"
-                  className="flex items-center gap-1.5 p-2.5 min-h-[40px] rounded-xl bg-white dark:bg-zinc-800 border border-slate-200/80 dark:border-zinc-700 hover:border-emerald-300 transition-colors"
+                  aria-label="تماس با پشتیبانی مون مارکت: ۰۹۱۰ ۰۹۸ ۰۰۰"
+                  className="flex items-center gap-1.5 p-2.5 min-h-[44px] rounded-xl bg-white dark:bg-zinc-800 border border-slate-200/80 dark:border-zinc-700 hover:border-emerald-300 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
-                  <Phone className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden />
-                  <span className="truncate font-medium" dir="ltr">
+                  <Phone className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
+                  <span className="truncate font-medium" dir="ltr" aria-hidden="true">
                     ۹۱۰۰۹۸۰۰۰
                   </span>
                 </a>

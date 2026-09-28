@@ -38,7 +38,7 @@ function CategoryCard({
         separately labelled for screen readers.
       */}
       <div
-        className={`group relative rounded-2xl border transition-all duration-200 min-h-[132px] sm:min-h-[150px] flex flex-col items-center justify-between gap-2 p-2.5 sm:p-3.5 ${
+        className={`group relative rounded-2xl border transition-colors duration-200 min-h-[132px] sm:min-h-[150px] flex flex-col items-center justify-between gap-2 p-2.5 sm:p-3.5 ${
           isSelected
             ? 'bg-emerald-500/15 dark:bg-emerald-950/60 border-emerald-500 shadow-lg ring-2 ring-emerald-500/30'
             : 'bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md border-slate-200/80 dark:border-zinc-800 hover:border-emerald-400/60 dark:hover:border-emerald-500/40 hover:shadow-md'
@@ -57,7 +57,7 @@ function CategoryCard({
           onClick={onToggle}
           aria-pressed={isSelected}
           aria-label={`فیلتر ${node.title} در همین صفحه`}
-          className={`w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center transition-all duration-200 shrink-0 ${
+          className={`min-w-[44px] min-h-[44px] w-11 h-11 sm:w-12 sm:h-12 rounded-xl sm:rounded-2xl flex items-center justify-center transition-colors duration-200 shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
             isSelected
               ? 'bg-emerald-500 text-white shadow-md shadow-emerald-500/30 scale-105'
               : 'bg-slate-100/90 dark:bg-zinc-800 text-emerald-600 dark:text-emerald-400 group-hover:scale-105'
@@ -68,7 +68,7 @@ function CategoryCard({
 
         <Link
           href={`/category/${node.slug}`}
-          className="w-full flex-1 flex flex-col justify-end items-center gap-0.5 focus-visible:outline-none"
+          className="w-full flex-1 flex flex-col justify-end items-center gap-0.5 min-h-[44px] rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
         >
           <span className="text-xs font-bold text-slate-800 dark:text-zinc-100 leading-tight text-center line-clamp-2">
             {node.title}
@@ -101,7 +101,7 @@ export function CategoryGrid({
             <button
               type="button"
               onClick={() => onSelect(null)}
-              className="text-xs text-emerald-600 dark:text-emerald-400 font-bold hover:underline"
+              className="min-h-[44px] px-2 text-xs text-emerald-600 dark:text-emerald-400 font-bold hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg"
             >
               نمایش همه کالاها
             </button>

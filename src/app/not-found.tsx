@@ -39,14 +39,14 @@ export default function NotFound() {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <Link
             href="/"
-            className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-lg shadow-emerald-600/25 flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <Home className="w-4 h-4" />
             <span>بازگشت به صفحه اصلی</span>
           </Link>
           <Link
             href="/cart"
-            className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-white/80 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-700 font-bold text-xs border border-slate-200/80 dark:border-zinc-700 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="w-full sm:w-auto px-5 py-3 rounded-2xl bg-white/80 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-700 font-bold text-xs border border-slate-200/80 dark:border-zinc-700 flex items-center justify-center gap-2 transition-colors cursor-pointer"
           >
             <ShoppingBag className="w-4 h-4 text-emerald-500" />
             <span>سبد خرید</span>

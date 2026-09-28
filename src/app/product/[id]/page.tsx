@@ -217,13 +217,15 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                           key={color.name}
                           type="button"
                           onClick={() => setSelectedColor(color)}
-                          className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-medium transition-all cursor-pointer ${
+                          aria-pressed={isSelected}
+                          className={`flex items-center gap-2 px-3 min-h-[44px] py-2 rounded-xl border text-xs font-medium transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                             isSelected
                               ? 'border-emerald-500 bg-emerald-50/60 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-300 shadow-sm'
                               : 'border-slate-200 dark:border-zinc-800 hover:border-slate-300 dark:hover:border-zinc-700 text-slate-700 dark:text-zinc-300'
                           }`}
                         >
                           <span
+                            aria-hidden="true"
                             className="w-3.5 h-3.5 rounded-full border border-black/15 shadow-inner"
                             style={{ backgroundColor: color.hex }}
                           />
@@ -297,7 +299,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
                 <button
                   type="button"
                   onClick={handleAddToCart}
-                  className={`flex-1 sm:flex-none px-6 h-12 rounded-xl text-white font-bold text-sm shadow-md transition-all active:scale-98 flex items-center justify-center gap-2 cursor-pointer ${
+                  className={`flex-1 sm:flex-none px-6 h-12 rounded-xl text-white font-bold text-sm shadow-md transition-colors active:scale-98 flex items-center justify-center gap-2 cursor-pointer ${
                     isAdded
                       ? 'bg-green-600 shadow-green-600/30'
                       : 'bg-gradient-to-br from-emerald-600 to-emerald-700 hover:from-emerald-700 shadow-emerald-600/20'
@@ -381,7 +383,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
           <button
             type="button"
             onClick={handleAddToCart}
-            className={`flex-1 h-11 rounded-xl text-white font-bold text-xs shadow-md active:scale-95 transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
+            className={`flex-1 h-11 rounded-xl text-white font-bold text-xs shadow-md active:scale-95 transition-colors flex items-center justify-center gap-1.5 cursor-pointer ${
               isAdded
                 ? 'bg-green-600'
                 : 'bg-gradient-to-br from-emerald-600 to-emerald-700'

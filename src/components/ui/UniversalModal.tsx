@@ -1,7 +1,8 @@
-'use client';
+ 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { X } from 'lucide-react';
+import { useFocusTrap, useScrollLock } from '@/hooks/useFocusTrap';
 
 export interface UniversalModalProps {
   show: boolean;
@@ -32,6 +33,12 @@ export const UniversalModal: React.FC<UniversalModalProps> = ({
   const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const [dragStartY, setDragStartY] = useState<number | null>(null);
   const [currentTranslateY, setCurrentTranslateY] = useState<number>(0);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const titleId = useId();
+  const descId = useId();
+
+  useFocusTrap(panelRef, show, onClose);
+  useScrollLock(show);
 
   useEffect(() => {
     const handleResize = () => {
@@ -48,14 +55,10 @@ export const UniversalModal: React.FC<UniversalModalProps> = ({
       if (bottomNav) {
         setNavbarHeight(bottomNav.offsetHeight);
       }
-      document.body.style.overflow = 'hidden';
+      setCurrentTranslateY(0);
     } else {
-      document.body.style.overflow = '';
       setCurrentTranslateY(0);
     }
-    return () => {
-      document.body.style.overflow = '';
-    };
   }, [show]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
@@ -83,15 +86,22 @@ export const UniversalModal: React.FC<UniversalModalProps> = ({
   if (!show) return null;
 
   return (
-    <div className="fixed inset-0 z-240 flex items-end md:items-center justify-center">
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center">
+      {/* Backdrop — decorative; dialog closes via Escape + close button (keyboard accessible) */}
       <div
+        aria-hidden="true"
         onClick={onClose}
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity duration-200"
+        className="fixed inset-0 bg-black/60 backdrop-blur-sm"
       />
 
       {/* Modal / Drawer Container */}
       <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
+        aria-describedby={description ? descId : undefined}
+        tabIndex={-1}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerUp}
         style={{
@@ -100,7 +110,7 @@ export const UniversalModal: React.FC<UniversalModalProps> = ({
           paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)',
           maxWidth: isDesktop ? '500px' : undefined,
         }}
-        className={`relative z-250 w-full overflow-hidden transition-transform duration-150 ease-out border shadow-2xl
+        className={`relative z-10 w-full overflow-hidden border shadow-2xl
           ${
             isDesktop
               ? 'rounded-2xl border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 max-h-[85vh] mx-4'
@@ -109,26 +119,29 @@ export const UniversalModal: React.FC<UniversalModalProps> = ({
           ${fullScreen ? 'h-full !rounded-none !max-h-none' : ''}
         `}
       >
-        {/* Mobile Drag Handle */}
+        {/* Mobile Drag Handle — button with keyboard alternative (Escape closes) */}
         {!isDesktop && (
-          <div
+          <button
+            type="button"
             onPointerDown={handlePointerDown}
-            className="flex w-full items-center justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing touch-none"
+            onClick={onClose}
+            aria-label="بستن پنجره"
+            className="flex w-full min-h-[44px] items-center justify-center pt-3 pb-1 cursor-grab active:cursor-grabbing touch-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           >
-            <div className="h-1.5 w-12 rounded-full bg-slate-300 dark:bg-zinc-700 hover:bg-slate-400 dark:hover:bg-zinc-600 transition-colors" />
-          </div>
+            <span className="h-1.5 w-12 rounded-full bg-slate-300 dark:bg-zinc-700" aria-hidden="true" />
+          </button>
         )}
 
         {/* Modal Header */}
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-zinc-800/80 px-6 py-4">
           <div className="text-right">
             {title && (
-              <h2 className="text-base font-bold text-slate-800 dark:text-zinc-100 tracking-tight">
+              <h2 id={titleId} className="text-base font-bold text-slate-800 dark:text-zinc-100 tracking-tight text-balance">
                 {title}
               </h2>
             )}
             {description && (
-              <p className="mt-1 text-xs text-slate-500 dark:text-zinc-400">
+              <p id={descId} className="mt-1 text-xs text-slate-500 dark:text-zinc-400">
                 {description}
               </p>
             )}
@@ -136,10 +149,10 @@ export const UniversalModal: React.FC<UniversalModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-xl p-2 text-slate-400 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer"
-            aria-label="بستن"
+            className="rounded-xl min-w-[44px] min-h-[44px] w-11 h-11 text-slate-400 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 hover:text-slate-600 dark:hover:text-zinc-200 transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+            aria-label={title ? `بستن: ${title}` : 'بستن پنجره'}
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5" aria-hidden="true" />
           </button>
         </div>
 

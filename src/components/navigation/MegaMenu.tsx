@@ -62,24 +62,25 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
   }, [isOpen, onClose]);
 
   const getCategoryIcon = (iconName: string, className = 'w-5 h-5') => {
+    const cls = `${className}`;
     switch (iconName) {
       case 'ShoppingBag':
-        return <ShoppingBag className={className} />;
+        return <ShoppingBag className={cls} aria-hidden="true" />;
       case 'Coffee':
-        return <Coffee className={className} />;
+        return <Coffee className={cls} aria-hidden="true" />;
       case 'Sparkles':
-        return <Sparkles className={className} />;
+        return <Sparkles className={cls} aria-hidden="true" />;
       case 'Droplets':
-        return <Droplets className={className} />;
+        return <Droplets className={cls} aria-hidden="true" />;
       case 'GlassWater':
-        return <GlassWater className={className} />;
+        return <GlassWater className={cls} aria-hidden="true" />;
       case 'Cookie':
-        return <Cookie className={className} />;
+        return <Cookie className={cls} aria-hidden="true" />;
       case 'Flame':
-        return <Flame className={className} />;
+        return <Flame className={cls} aria-hidden="true" />;
       case 'Utensils':
       default:
-        return <Utensils className={className} />;
+        return <Utensils className={cls} aria-hidden="true" />;
     }
   };
 
@@ -93,7 +94,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
           exit={{ opacity: 0, y: 8, scale: 0.99 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
           className="absolute top-full right-0 mt-2 w-[920px] max-w-[calc(100vw-2rem)] bg-white/95 dark:bg-zinc-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-zinc-800 rounded-3xl shadow-2xl z-50 overflow-hidden text-right select-none"
-          role="region"
+          role="navigation"
           aria-label="مگامنوی دسته‌بندی کالاهای مون مارکت"
         >
           <div className="flex h-[460px]">
@@ -110,11 +111,13 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                       key={cat.id}
                       type="button"
                       onMouseEnter={() => setActiveCategoryIndex(idx)}
+                      onFocus={() => setActiveCategoryIndex(idx)}
                       onClick={() => {
                         setActiveCategoryIndex(idx);
                         onSelectCategory?.(cat.id);
                       }}
-                      className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-2xl text-xs font-bold transition-all cursor-pointer text-right group ${
+                      aria-current={isActive ? 'true' : undefined}
+                      className={`w-full flex items-center justify-between px-3.5 py-2.5 min-h-[44px] rounded-2xl text-xs font-bold transition-colors cursor-pointer text-right group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                         isActive
                           ? 'bg-emerald-600 text-white shadow-md shadow-emerald-600/20'
                           : 'text-slate-700 dark:text-zinc-300 hover:bg-slate-200/60 dark:hover:bg-zinc-800/70'
@@ -133,6 +136,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                         <span className="truncate">{cat.title}</span>
                       </div>
                       <ChevronLeft
+                        aria-hidden="true"
                         className={`w-4 h-4 shrink-0 transition-transform ${
                           isActive
                             ? 'text-white translate-x-0.5'
@@ -174,10 +178,10 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                   <Link
                     href={`/category/${activeCategory.slug}`}
                     onClick={onClose}
-                    className="flex items-center gap-1.5 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 transition-colors group"
+                    className="flex items-center gap-1.5 min-h-[44px] text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:text-emerald-700 transition-colors group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg px-1"
                   >
                     <span>مشاهده همه محصولات این دسته</span>
-                    <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" />
+                    <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-1 transition-transform" aria-hidden="true" />
                   </Link>
                 </div>
 
@@ -188,9 +192,9 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                       <Link
                         href={`/category/${sub.slug}`}
                         onClick={onClose}
-                        className="inline-flex items-center gap-1.5 text-xs font-black text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                        className="inline-flex items-center gap-1.5 min-h-[44px] text-xs font-black text-slate-800 dark:text-zinc-200 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-lg px-1"
                       >
-                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
                         <span>{sub.title}</span>
                       </Link>
 
@@ -201,11 +205,11 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                               key={idx}
                               href={`/category/${sub.slug}?q=${encodeURIComponent(item)}`}
                               onClick={onClose}
-                              className="text-[11px] text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-300 hover:underline transition-colors"
+                              className="min-h-[44px] inline-flex items-center text-[11px] text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-300 hover:underline transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded px-1"
                             >
                               {item}
                               {idx < sub.items!.length - 1 && (
-                                <span className="text-slate-300 dark:text-zinc-700 mr-1.5">|</span>
+                                <span className="text-slate-300 dark:text-zinc-700 mr-1.5" aria-hidden="true">|</span>
                               )}
                             </Link>
                           ))}
@@ -219,8 +223,8 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
               {/* Promotional Strip inside MegaMenu */}
               <div className="mt-4 p-3.5 rounded-2xl bg-gradient-to-r from-emerald-50 to-teal-50 dark:from-emerald-950/40 dark:to-teal-950/30 border border-emerald-200/80 dark:border-emerald-800/40 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <Flame className="w-4 h-4 fill-white" />
+                  <div className="w-8 h-8 rounded-xl bg-emerald-500 text-white flex items-center justify-center shrink-0 shadow-sm" aria-hidden="true">
+                    <Flame className="w-4 h-4 fill-white" aria-hidden="true" />
                   </div>
                   <div>
                     <span className="text-xs font-black text-slate-800 dark:text-zinc-100 block">
@@ -235,7 +239,7 @@ export const MegaMenu: React.FC<MegaMenuProps> = ({
                 <Link
                   href="/#festival-deals"
                   onClick={onClose}
-                  className="px-3.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition-all shadow-xs shrink-0"
+                  className="px-3.5 min-h-[44px] inline-flex items-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold transition-colors shadow-xs shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 >
                   مشاهده تخفیف‌ها
                 </Link>

@@ -118,7 +118,7 @@ export function CategoryView({ node, initialTerm }: { node: CategoryNode; initia
                   key={child.id}
                   href={`/category/${child.slug}`}
                   aria-current={isCurrent ? 'page' : undefined}
-                  className={`px-4 py-2 min-h-[40px] inline-flex items-center rounded-xl text-xs font-bold border shrink-0 transition-colors ${
+                  className={`px-4 py-2 min-h-[44px] inline-flex items-center rounded-xl text-xs font-bold border shrink-0 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                     isCurrent
                       ? 'bg-emerald-600 text-white border-emerald-600'
                       : 'bg-white dark:bg-zinc-900 text-slate-700 dark:text-zinc-300 border-slate-200/80 dark:border-zinc-800 hover:border-emerald-300'
@@ -150,7 +150,7 @@ export function CategoryView({ node, initialTerm }: { node: CategoryNode; initia
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setSort(option.id)}
-                  className={`px-3.5 py-2 min-h-[36px] rounded-lg transition-colors shrink-0 ${
+                  className={`px-3.5 py-2 min-h-[44px] rounded-lg transition-colors shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                     isActive
                       ? 'bg-white dark:bg-zinc-900 text-emerald-600 dark:text-emerald-400 shadow-sm font-bold'
                       : 'text-slate-600 dark:text-zinc-400 hover:text-slate-800 dark:hover:text-zinc-200'
@@ -181,8 +181,8 @@ export function CategoryView({ node, initialTerm }: { node: CategoryNode; initia
             role="status"
             className="text-center py-20 p-6 rounded-3xl bg-slate-50 dark:bg-zinc-800/40 border border-slate-200/80 dark:border-zinc-800"
           >
-            <PackageX className="w-12 h-12 text-slate-400 dark:text-zinc-500 mx-auto mb-3" />
-            <h2 className="text-base font-bold text-slate-700 dark:text-zinc-200 mb-1">
+            <PackageX className="w-12 h-12 text-slate-400 dark:text-zinc-500 mx-auto mb-3" aria-hidden="true" />
+            <h2 className="text-base font-bold text-slate-700 dark:text-zinc-200 mb-1 text-balance">
               کالایی در «{node.title}» موجود نیست
             </h2>
             <p className="text-xs text-slate-500 dark:text-zinc-400 mb-4">
@@ -192,14 +192,14 @@ export function CategoryView({ node, initialTerm }: { node: CategoryNode; initia
               {siblings.length > 0 ? (
                 <Link
                   href={`/category/${node.parentSlug ?? siblings[0].slug}`}
-                  className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] rounded-xl bg-slate-200 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors"
+                  className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[44px] rounded-xl bg-slate-200 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 text-xs font-bold hover:bg-slate-300 dark:hover:bg-zinc-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
                   دیدن همه کالاهای این دسته
                 </Link>
               ) : null}
               <Link
                 href="/"
-                className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[40px] rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-md hover:bg-emerald-700 transition-colors"
+                className="inline-flex items-center gap-1.5 px-4 py-2 min-h-[44px] rounded-xl bg-emerald-600 text-white text-xs font-bold shadow-md hover:bg-emerald-700 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               >
                 بازگشت به فروشگاه
               </Link>

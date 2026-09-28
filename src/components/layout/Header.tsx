@@ -70,7 +70,7 @@ export const Header: React.FC<HeaderProps> = ({
   return (
     <>
       <header
-        className={`sticky top-0 z-40 w-full transition-all duration-300 border-b
+        className={`sticky top-0 z-40 w-full transition-colors duration-300 border-b
           bg-slate-50/88 dark:bg-zinc-950/90
           backdrop-blur-[16px] [backdrop-filter:blur(16px)_saturate(190%)]
           ${isScrolled
@@ -89,10 +89,10 @@ export const Header: React.FC<HeaderProps> = ({
                 whileHover={hoverScale(1.05)}
                 whileTap={hoverScale(0.92)}
                 onClick={() => setIsDrawerOpen(true)}
-                className="md:hidden w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                className="md:hidden min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 aria-label="باز کردن منوی دسته‌بندی"
               >
-                <Menu className="w-[18px] h-[18px]" />
+                <Menu className="w-[18px] h-[18px]" aria-hidden="true" />
               </motion.button>
 
               <Link href="/" className="flex items-center gap-2 sm:gap-2.5 shrink-0 group">
@@ -132,11 +132,11 @@ export const Header: React.FC<HeaderProps> = ({
               <Link
                 href="/messages"
                 aria-label={`پیام‌ها و پشتیبانی${messageUnread > 0 ? ` — ${toPersianDigits(messageUnread)} پیام خوانده‌نشده` : ''}`}
-                className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hidden sm:flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hidden sm:flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
               >
-                <MessageCircle className="w-4 h-4 sm:w-[18px] sm:h-[18px]" aria-hidden />
+                <MessageCircle className="w-[18px] h-[18px]" aria-hidden="true" />
                 {messageUnread > 0 ? (
-                  <span className="absolute -top-1.5 -end-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center shadow-md shadow-rose-500/45 tabular-nums">
+                  <span aria-hidden="true" className="absolute -top-1.5 -end-1.5 min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center shadow-md shadow-rose-500/45 tabular-nums">
                     {messageUnread > 99 ? '+۹۹' : toPersianDigits(messageUnread)}
                   </span>
                 ) : null}
@@ -157,9 +157,9 @@ export const Header: React.FC<HeaderProps> = ({
                       : 'انتخاب آدرس تحویل'
                   }
                   title={activeAddressTitle ?? 'انتخاب آدرس تحویل'}
-                  className="hidden lg:flex items-center gap-1.5 h-10 px-3 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer max-w-[190px]"
+                  className="hidden lg:flex items-center gap-1.5 min-h-[44px] h-11 px-3 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer max-w-[190px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
-                  <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                  <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
                   <span className="truncate">
                     {activeAddressTitle ?? 'انتخاب آدرس'}
                   </span>
@@ -172,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({
                 whileHover={hoverScale(1.06)}
                 whileTap={hoverScale(0.9)}
                 onClick={toggleTheme}
-                className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 title={resolvedTheme === 'dark' ? 'تم روشن' : 'تم تاریک'}
                 aria-label={resolvedTheme === 'dark' ? 'فعال‌کردن تم روشن' : 'فعال‌کردن تم تاریک'}
               >
@@ -205,9 +205,9 @@ export const Header: React.FC<HeaderProps> = ({
               {isAuthenticated ? (
                 <Link
                   href="/profile"
-                  className="flex items-center gap-1.5 px-3 h-9 sm:h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 min-h-[44px] rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
-                  <User className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden />
+                  <User className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true" />
                   <span className="hidden sm:inline">{firstName ?? 'پروفایل'}</span>
                 </Link>
               ) : (
@@ -216,9 +216,9 @@ export const Header: React.FC<HeaderProps> = ({
                   whileHover={hoverScale(1.03)}
                   whileTap={hoverScale(0.95)}
                   onClick={onLoginClick}
-                  className="flex items-center gap-1.5 px-3 h-9 sm:h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 min-h-[44px] rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors text-xs font-semibold cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
-                  <User className="w-3.5 h-3.5 shrink-0" aria-hidden />
+                  <User className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
                   <span>ورود</span>
                 </motion.button>
               )}
@@ -226,12 +226,12 @@ export const Header: React.FC<HeaderProps> = ({
               {/* Cart */}
               <Link
                 href="/cart"
-                className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center hover:from-emerald-500 hover:to-emerald-600 shadow-md shadow-emerald-600/30 dark:shadow-emerald-700/40 active:scale-95 transition-all cursor-pointer"
+                className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center hover:from-emerald-500 hover:to-emerald-600 shadow-md shadow-emerald-600/30 dark:shadow-emerald-700/40 active:scale-95 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1"
                 aria-label={
                   cartCount > 0 ? `سبد خرید، ${toPersianDigits(cartCount)} کالا` : 'سبد خرید، خالی'
                 }
               >
-                <ShoppingCart className="w-4 h-4 sm:w-[18px] sm:h-[18px]" aria-hidden />
+                <ShoppingCart className="w-[18px] h-[18px]" aria-hidden="true" />
                 <AnimatePresence>
                   {cartCount > 0 ? (
                     <motion.span

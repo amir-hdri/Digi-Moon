@@ -93,7 +93,7 @@ export const MessagePanel: React.FC<MessagePanelProps> = ({ initialThreadId = nu
         </div>
         <div className="max-h-64 md:max-h-[26rem] overflow-y-auto custom-scrollbar divide-y divide-slate-100 dark:divide-zinc-800/70">
           {loading && threads.length === 0 ? (
-            <p className="p-4 text-center text-[11px] text-slate-400">در حال دریافت گفتگوها...</p>
+            <p className="p-4 text-center text-[11px] text-slate-400">در حال دریافت گفتگوها…</p>
           ) : threads.length === 0 ? (
             <p className="p-4 text-center text-[11px] text-slate-400">گفتگویی وجود ندارد.</p>
           ) : (
@@ -104,7 +104,8 @@ export const MessagePanel: React.FC<MessagePanelProps> = ({ initialThreadId = nu
                   key={thread.id}
                   type="button"
                   onClick={() => void openThread(thread.id)}
-                  className={`w-full p-3.5 text-right transition-colors cursor-pointer ${
+                  aria-current={isActive ? 'true' : undefined}
+                  className={`w-full min-h-[44px] p-3.5 text-right transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 ${
                     isActive
                       ? 'bg-emerald-500/[0.07]'
                       : 'hover:bg-slate-50 dark:hover:bg-zinc-800/60'
@@ -115,7 +116,7 @@ export const MessagePanel: React.FC<MessagePanelProps> = ({ initialThreadId = nu
                       {thread.title}
                     </span>
                     {thread.unreadCount > 0 && (
-                      <span className="min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center tabular-nums shrink-0">
+                      <span aria-hidden="true" className="min-w-[18px] h-[18px] px-1 rounded-full bg-rose-500 text-white text-[10px] font-black flex items-center justify-center tabular-nums shrink-0">
                         {toPersianDigits(thread.unreadCount)}
                       </span>
                     )}
@@ -194,12 +195,12 @@ export const MessagePanel: React.FC<MessagePanelProps> = ({ initialThreadId = nu
             </div>
 
             {error && (
-              <div className="mx-4 mb-2 flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[11px] font-bold">
+              <div role="alert" className="mx-4 mb-2 flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[11px] font-bold">
                 <span>{error}</span>
                 <button
                   type="button"
                   onClick={clearError}
-                  className="underline cursor-pointer"
+                  className="min-h-[44px] px-2 underline cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-400 rounded-lg"
                 >
                   بستن
                 </button>
@@ -213,20 +214,21 @@ export const MessagePanel: React.FC<MessagePanelProps> = ({ initialThreadId = nu
                   onChange={(e) => setDraft(e.target.value)}
                   rows={1}
                   maxLength={1000}
-                  placeholder="پیام خود را بنویسید..."
+                  placeholder="پیام خود را بنویسید…"
                   aria-label="متن پیام"
-                  className="flex-1 max-h-28 px-3.5 py-2.5 rounded-xl bg-slate-100/80 dark:bg-zinc-800/80 border border-transparent focus:border-emerald-500 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none transition-all resize-none"
+                  className="flex-1 min-h-[44px] max-h-28 px-3.5 py-2.5 rounded-xl bg-slate-100/80 dark:bg-zinc-800/80 border border-transparent focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 text-sm text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none transition-colors resize-none"
                 />
                 <button
                   type="submit"
                   disabled={sending}
                   aria-label="ارسال پیام"
-                  className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center hover:bg-emerald-500 disabled:opacity-60 transition-colors shrink-0 cursor-pointer"
+                  aria-busy={sending}
+                  className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-emerald-600 text-white flex items-center justify-center hover:bg-emerald-500 disabled:opacity-60 transition-colors shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                 >
                   {sending ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />
                   ) : (
-                    <Send className="w-4 h-4 -scale-x-100" />
+                    <Send className="w-4 h-4 -scale-x-100" aria-hidden="true" />
                   )}
                 </button>
               </div>

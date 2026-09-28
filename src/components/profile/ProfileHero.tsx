@@ -122,7 +122,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
             <button
               type="button"
               onClick={onLoginClick}
-              className="inline-flex items-center bg-white text-emerald-700 font-bold px-6 py-2.5 rounded-2xl shadow-lg hover:bg-emerald-50 transition-all active:scale-95 cursor-pointer text-sm"
+              className="inline-flex items-center bg-white text-emerald-700 font-bold px-6 py-2.5 rounded-2xl shadow-lg hover:bg-emerald-50 transition-colors active:scale-95 cursor-pointer text-sm"
             >
               ورود به حساب کاربری
             </button>
@@ -135,7 +135,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
         {/* Festival Campaign Card (شگفتانه) */}
         <div
           onClick={onFestivalClick}
-          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-all cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
+          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
           <div className="flex items-center space-x-3 space-x-reverse">
             <div className="w-11 h-11 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
@@ -156,7 +156,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
         {/* Orders Card */}
         <div
           onClick={onOrdersClick}
-          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-all cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
+          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
           <div className="flex items-center space-x-3 space-x-reverse">
             <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
@@ -177,7 +177,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
         {/* Favorites Card */}
         <div
           onClick={onFavoritesClick}
-          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-all cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
+          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
           <div className="flex items-center space-x-3 space-x-reverse">
             <div className="w-11 h-11 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
@@ -198,7 +198,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
         {/* Addresses Card */}
         <div
           onClick={onAddressClick}
-          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-all cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
+          className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
           <div className="flex items-center space-x-3 space-x-reverse">
             <div className="w-11 h-11 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">

@@ -88,15 +88,17 @@ export const NotificationCenter: React.FC = () => {
         type="button"
         whileTap={{ scale: 0.9 }}
         onClick={() => setOpen((prev) => !prev)}
-        aria-label="مرکز اعلان‌ها"
+        aria-label={unreadCount > 0 ? `مرکز اعلان‌ها، ${toPersianDigits(unreadCount)} خوانده‌نشده` : 'مرکز اعلان‌ها'}
         aria-expanded={open}
-        className="relative w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer"
+        aria-haspopup="dialog"
+        className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100/90 dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center hover:bg-slate-200 dark:hover:bg-zinc-700 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
       >
-        <Bell className="w-4 h-4 sm:w-[18px] sm:h-[18px]" />
+        <Bell className="w-[18px] h-[18px]" aria-hidden="true" />
         <AnimatePresence>
           {unreadCount > 0 && (
             <motion.span
               key={unreadCount}
+              aria-hidden="true"
               initial={{ scale: 0.4, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.4, opacity: 0 }}
@@ -116,6 +118,7 @@ export const NotificationCenter: React.FC = () => {
             exit={{ opacity: 0, y: -8, scale: 0.98 }}
             transition={{ duration: 0.18 }}
             role="dialog"
+            aria-modal="false"
             aria-label="مرکز اعلان‌ها"
             className="absolute end-0 top-12 z-50 w-[calc(100vw-2rem)] max-w-sm rounded-2xl border border-slate-200/80 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-2xl overflow-hidden"
           >
@@ -132,30 +135,32 @@ export const NotificationCenter: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => void markAllRead()}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   title="خواندن همه"
                   aria-label="خواندن همه اعلان‌ها"
                 >
-                  <CheckCheck className="w-4 h-4" />
+                  <CheckCheck className="w-4 h-4" aria-hidden="true" />
                 </button>
                 <button
                   type="button"
                   onClick={() => setOpen(false)}
-                  className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+                  className="min-w-[44px] min-h-[44px] flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                   aria-label="بستن اعلان‌ها"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-4 h-4" aria-hidden="true" />
                 </button>
               </div>
             </div>
 
-            <div className="flex items-center gap-1.5 px-3 pt-3 overflow-x-auto no-scrollbar">
+            <div role="tablist" aria-label="فیلتر اعلان‌ها" className="flex items-center gap-1.5 px-3 pt-3 overflow-x-auto no-scrollbar">
               {TABS.map((tab) => (
                 <button
                   key={tab.id}
                   type="button"
+                  role="tab"
+                  aria-selected={filter === tab.id}
                   onClick={() => setFilter(tab.id)}
-                  className={`px-3 py-1.5 rounded-lg text-[11px] font-bold whitespace-nowrap transition-colors cursor-pointer ${
+                  className={`px-3 min-h-[44px] rounded-lg text-[11px] font-bold whitespace-nowrap transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                     filter === tab.id
                       ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300'
                       : 'text-slate-500 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800'
@@ -168,10 +173,10 @@ export const NotificationCenter: React.FC = () => {
 
             <div className="max-h-[22rem] overflow-y-auto custom-scrollbar p-2">
               {loading && items.length === 0 ? (
-                <p className="py-10 text-center text-xs text-slate-400">در حال دریافت اعلان‌ها...</p>
+                <p className="py-10 text-center text-xs text-slate-400">در حال دریافت اعلان‌ها…</p>
               ) : items.length === 0 ? (
                 <div className="py-10 text-center">
-                  <Bell className="w-8 h-8 text-slate-300 dark:text-zinc-600 mx-auto mb-2" />
+                  <Bell className="w-8 h-8 text-slate-300 dark:text-zinc-600 mx-auto mb-2" aria-hidden="true" />
                   <p className="text-xs text-slate-500 dark:text-zinc-400">اعلانی وجود ندارد.</p>
                 </div>
               ) : (
@@ -186,16 +191,17 @@ export const NotificationCenter: React.FC = () => {
                         void markRead(item.id);
                         setOpen(false);
                       }}
-                      className={`w-full flex items-start gap-2.5 p-3 rounded-xl text-right transition-colors cursor-pointer ${
+                      className={`w-full flex items-start gap-2.5 p-3 rounded-xl text-right transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                         item.read
                           ? 'hover:bg-slate-50 dark:hover:bg-zinc-800/60'
                           : 'bg-emerald-500/[0.06] hover:bg-emerald-500/10'
                       }`}
                     >
                       <span
+                        aria-hidden="true"
                         className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 ${meta.classes}`}
                       >
-                        <Icon className="w-4 h-4" />
+                        <Icon className="w-4 h-4" aria-hidden="true" />
                       </span>
                       <span className="flex-1 min-w-0">
                         <span className="flex items-center gap-1.5">

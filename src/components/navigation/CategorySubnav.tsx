@@ -44,7 +44,7 @@ export const CategorySubnav: React.FC<CategorySubnavProps> = ({
 
   return (
     <div className="relative w-full border-t border-slate-200/70 dark:border-zinc-800/80 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-md z-30">
-      <div className="max-w-7xl mx-auto px-3 sm:px-6 h-10 sm:h-12 flex items-center justify-between gap-2 sm:gap-3 text-xs relative">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 min-h-[48px] h-12 sm:h-12 flex items-center justify-between gap-2 sm:gap-3 text-xs relative">
         {/* Right Section: Category Trigger (Fixed, NEVER in overflow) + Quick Links (Scrollable) */}
         <div className="flex items-center gap-1.5 sm:gap-3 flex-1 min-w-0">
           {/* Main Category Trigger Button - Free from overflow clipping */}
@@ -52,6 +52,8 @@ export const CategorySubnav: React.FC<CategorySubnavProps> = ({
             className="relative shrink-0"
             onMouseEnter={handleMouseEnter}
             onMouseLeave={handleMouseLeave}
+            onFocus={handleMouseEnter}
+            onBlur={handleMouseLeave}
           >
             <button
               type="button"
@@ -62,17 +64,20 @@ export const CategorySubnav: React.FC<CategorySubnavProps> = ({
                   setIsMegaMenuOpen((prev) => !prev);
                 }
               }}
-              className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl font-black transition-all cursor-pointer select-none text-[11px] sm:text-sm ${
+              id="category-mega-trigger"
+              aria-controls="mega-menu"
+              className={`flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 min-h-[44px] py-2 rounded-xl font-black transition-colors cursor-pointer select-none text-[11px] sm:text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                 isMegaMenuOpen
                   ? 'bg-emerald-600 text-white shadow-lg shadow-emerald-600/30'
                   : 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-500/20 border border-emerald-500/25'
               }`}
               aria-expanded={isMegaMenuOpen}
-              aria-haspopup="true"
+              aria-haspopup="menu"
             >
-              <Menu className="w-4 h-4" />
+              <Menu className="w-4 h-4" aria-hidden="true" />
               <span>دسته‌بندی کالاها</span>
               <ChevronDown
+                aria-hidden="true"
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
                   isMegaMenuOpen ? 'rotate-180' : ''
                 }`}
@@ -98,33 +103,33 @@ export const CategorySubnav: React.FC<CategorySubnavProps> = ({
           <div className="flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar py-1 flex-1 min-w-0">
             <Link
               href="/#festival-deals"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-zinc-300 hover:text-rose-600 dark:hover:text-rose-400 font-bold transition-colors whitespace-nowrap group text-xs shrink-0"
+              className="flex items-center gap-1.5 px-2.5 min-h-[44px] rounded-lg text-slate-700 dark:text-zinc-300 hover:text-rose-600 dark:hover:text-rose-400 font-bold transition-colors whitespace-nowrap group text-xs shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              <Flame className="w-3.5 h-3.5 text-rose-500 fill-rose-500 group-hover:scale-110 transition-transform" />
+              <Flame className="w-3.5 h-3.5 text-rose-500 fill-rose-500 group-hover:scale-110 transition-transform" aria-hidden="true" />
               <span>شگفتانه‌ها و تخفیف‌ها</span>
             </Link>
 
             <Link
               href="/category/groceries"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0"
+              className="flex items-center gap-1.5 px-2.5 min-h-[44px] rounded-lg text-slate-700 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              <ShoppingBag className="w-3.5 h-3.5 text-amber-500" />
+              <ShoppingBag className="w-3.5 h-3.5 text-amber-500" aria-hidden="true" />
               <span>کالاهای اساسی</span>
             </Link>
 
             <Link
               href="/category/dairy"
-              className="hidden md:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-zinc-300 hover:text-sky-600 dark:hover:text-sky-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0"
+              className="hidden md:flex items-center gap-1.5 px-2.5 min-h-[44px] rounded-lg text-slate-700 dark:text-zinc-300 hover:text-sky-600 dark:hover:text-sky-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              <Coffee className="w-3.5 h-3.5 text-sky-500" />
+              <Coffee className="w-3.5 h-3.5 text-sky-500" aria-hidden="true" />
               <span>لبنیات تازه</span>
             </Link>
 
             <Link
               href="/category/beauty-hygiene"
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-zinc-300 hover:text-pink-600 dark:hover:text-pink-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0"
+              className="flex items-center gap-1.5 px-2.5 min-h-[44px] rounded-lg text-slate-700 dark:text-zinc-300 hover:text-pink-600 dark:hover:text-pink-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              <Sparkles className="w-3.5 h-3.5 text-pink-500" />
+              <Sparkles className="w-3.5 h-3.5 text-pink-500" aria-hidden="true" />
               <span>آرایشی و بهداشتی</span>
               <span className="text-[8px] px-1 py-0.5 rounded bg-pink-500/15 text-pink-600 dark:text-pink-400 font-bold leading-none">
                 ویژه
@@ -133,17 +138,17 @@ export const CategorySubnav: React.FC<CategorySubnavProps> = ({
 
             <Link
               href="/category/cleaning"
-              className="hidden lg:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-zinc-300 hover:text-teal-600 dark:hover:text-teal-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0"
+              className="hidden lg:flex items-center gap-1.5 px-2.5 min-h-[44px] rounded-lg text-slate-700 dark:text-zinc-300 hover:text-teal-600 dark:hover:text-teal-400 font-bold transition-colors whitespace-nowrap text-xs shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              <Droplets className="w-3.5 h-3.5 text-teal-500" />
+              <Droplets className="w-3.5 h-3.5 text-teal-500" aria-hidden="true" />
               <span>شوینده و نظافت</span>
             </Link>
 
             <Link
               href="/branches"
-              className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-slate-700 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold transition-colors whitespace-nowrap text-xs shrink-0"
+              className="hidden xl:flex items-center gap-1.5 px-2.5 min-h-[44px] rounded-lg text-slate-700 dark:text-zinc-300 hover:text-emerald-600 dark:hover:text-emerald-400 font-semibold transition-colors whitespace-nowrap text-xs shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             >
-              <Store className="w-3.5 h-3.5 text-slate-400" />
+              <Store className="w-3.5 h-3.5 text-slate-400" aria-hidden="true" />
               <span>شعبات مون مارکت</span>
             </Link>
           </div>
@@ -152,7 +157,7 @@ export const CategorySubnav: React.FC<CategorySubnavProps> = ({
         {/* Left Section: Express Delivery Badge */}
         <div className="hidden sm:flex items-center gap-2 shrink-0 text-xs text-slate-600 dark:text-zinc-400 font-medium">
           <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border border-emerald-500/20">
-            <Zap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 animate-pulse" />
+            <Zap className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 motion-reduce:animate-none animate-pulse" aria-hidden="true" />
             <span className="font-bold">ارسال اکسپرس سوپرمارکت تا ۴۵ دقیقه</span>
           </div>
         </div>

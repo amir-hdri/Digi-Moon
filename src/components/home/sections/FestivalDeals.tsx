@@ -45,7 +45,7 @@ export function FestivalDeals({ onAddToCart }: { onAddToCart: (product: Product)
       <motion.div
         animate={reduceMotion ? undefined : { scale: [1, 1.2, 1], opacity: [0.25, 0.45, 0.25] }}
         transition={reduceMotion ? {} : { repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-        aria-hidden
+        aria-hidden="true"
         className="absolute -top-16 -start-16 w-56 h-56 bg-emerald-400/30 rounded-full blur-3xl pointer-events-none"
       />
       <motion.div
@@ -53,7 +53,7 @@ export function FestivalDeals({ onAddToCart }: { onAddToCart: (product: Product)
         transition={
           reduceMotion ? {} : { repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 0.5 }
         }
-        aria-hidden
+        aria-hidden="true"
         className="absolute -bottom-16 -end-16 w-56 h-56 bg-teal-400/30 rounded-full blur-3xl pointer-events-none"
       />
 
@@ -62,13 +62,13 @@ export function FestivalDeals({ onAddToCart }: { onAddToCart: (product: Product)
           <motion.div
             animate={reduceMotion ? undefined : { rotate: [0, -6, 6, 0] }}
             transition={reduceMotion ? {} : { repeat: Infinity, duration: 2.5, ease: 'easeInOut' }}
-            aria-hidden
+            aria-hidden="true"
             className="w-12 h-12 rounded-2xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center shadow-md shrink-0"
           >
-            <Flame className="w-6 h-6 text-amber-300 fill-amber-300" />
+            <Flame className="w-6 h-6 text-amber-300 fill-amber-300" aria-hidden="true" />
           </motion.div>
           <div>
-            <h2 id="festival-heading" className="text-lg sm:text-xl font-black text-white">
+            <h2 id="festival-heading" className="text-lg sm:text-xl font-black text-white text-balance">
               پیشنهادهای شگفت‌انگیز مون مارکت
             </h2>
             <span className="text-xs text-emerald-100 font-medium">
@@ -87,14 +87,14 @@ export function FestivalDeals({ onAddToCart }: { onAddToCart: (product: Product)
         <div
           role="timer"
           aria-live="off"
-          aria-label={`زمان باقی‌مانده تا پایان پیشنهاد: ${hours} ساعت و ${minutes} دقیقه`}
+          aria-label={`زمان باقی‌مانده تا پایان پیشنهاد: ${toPersianDigits(hours)} ساعت و ${toPersianDigits(minutes)} دقیقه و ${toPersianDigits(seconds)} ثانیه`}
           className={`flex items-center gap-2.5 px-3.5 py-2.5 rounded-2xl backdrop-blur-md border text-xs font-bold shadow-md ${
             isUrgent
               ? 'bg-rose-500/25 border-rose-300/40'
               : 'bg-black/35 border-white/25'
           }`}
         >
-          <Clock className={`w-4 h-4 shrink-0 ${isUrgent ? 'text-rose-200' : 'text-amber-300'}`} />
+          <Clock className={`w-4 h-4 shrink-0 ${isUrgent ? 'text-rose-200' : 'text-amber-300'}`} aria-hidden="true" />
           {expired ? (
             <span className="text-rose-100">به‌زودی تمدید می‌شود</span>
           ) : (
@@ -110,9 +110,9 @@ export function FestivalDeals({ onAddToCart }: { onAddToCart: (product: Product)
       </div>
 
       {mockFestivalProducts.length > 0 ? (
-        <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 overflow-x-auto sm:overflow-x-visible pb-3 sm:pb-0 no-scrollbar snap-x snap-mandatory relative z-10">
+        <div className="flex sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 overflow-x-auto sm:overflow-x-visible pb-3 sm:pb-0 no-scrollbar snap-x snap-mandatory relative z-10" role="list" aria-label="پیشنهادهای شگفت‌انگیز" tabIndex={0}>
           {mockFestivalProducts.map((product) => (
-            <div key={product.id} className="w-[160px] xs:w-[180px] sm:w-auto shrink-0 snap-start">
+            <div key={product.id} role="listitem" className="w-[170px] xs:w-[180px] sm:w-auto shrink-0 snap-start min-w-0">
               <ProductCard product={product} onAddToCart={onAddToCart} />
             </div>
           ))}

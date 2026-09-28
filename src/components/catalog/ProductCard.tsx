@@ -141,12 +141,12 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
   const handleCardClick = useCallback(() => onClick?.(product), [onClick, product]);
   const detailHref = `/product/${product.slug}`;
+  const detailLabel = `مشاهده جزئیات ${product.title}`;
 
   const hoverScale = (value: number) => (reduceMotion ? undefined : { scale: value });
 
   return (
     <motion.article
-      onClick={handleCardClick}
       initial={reduceMotion ? false : { opacity: 0, y: 16 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '24px' }}
@@ -156,7 +156,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
         outOfStock
           ? 'border-slate-200/70 dark:border-zinc-800/80 opacity-75'
           : 'border-slate-200/70 dark:border-zinc-800/80'
-      } ${onClick ? 'cursor-pointer' : ''}`}
+      }`}
     >
       <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-white/45 to-transparent dark:from-white/[0.04] pointer-events-none rounded-t-2xl sm:rounded-t-3xl z-0" aria-hidden />
 
@@ -175,18 +175,17 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           <div className="absolute inset-0 bg-gradient-to-b from-slate-50/90 to-slate-100/60 dark:from-zinc-800/40 dark:to-zinc-800/80" aria-hidden />
 
           {/*
-            The image and title are a real <Link> to the product page. They used to sit in
-            a <div onClick={...}> whose handler was `onClick?.(product)` — and no caller
-            anywhere in the app passes `onClick`, so every card rendered `cursor-pointer`
-            and navigated nowhere. A real anchor also restores keyboard and
-            screen-reader access, which the div never had.
+            Single accessible link per card: image + title share one destination.
+            The title below is a plain span to avoid nested anchors.
           */}
           <Link
             href={detailHref}
-            tabIndex={-1}
-            aria-hidden
-            className="absolute inset-0 z-10"
-            onClick={(e) => e.stopPropagation()}
+            aria-label={detailLabel}
+            className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 rounded-xl sm:rounded-2xl"
+            onClick={(e) => {
+              e.stopPropagation();
+              handleCardClick();
+            }}
           />
 
           <Image
@@ -203,7 +202,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             style={{ transition: 'transform 0.4s cubic-bezier(0.16,1,0.3,1)' }}
           />
 
-          <div className="absolute top-1.5 sm:top-2 inset-x-1.5 sm:inset-x-2 z-20 flex justify-between items-start pointer-events-none">
+          <div className="absolute top-1.5 sm:top-2 inset-x-1.5 sm:inset-x-2 z-20 flex justify-between items-start pointer-events-none" aria-hidden="true">
             {discount > 0 ? (
               <span className="inline-flex items-center gap-0.5 rounded-lg bg-red-500 px-1.5 py-0.5 text-[10px] sm:text-xs font-black text-white shadow-sm shadow-red-500/40 leading-none">
                 ٪{toPersianDigits(discount)}
@@ -214,7 +213,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
 
             {product.isSpecial ? (
               <span className="inline-flex items-center gap-1 rounded-lg bg-gradient-to-r from-amber-500 to-orange-500 px-1.5 py-0.5 text-[9px] sm:text-[10px] font-black text-white shadow-sm shadow-amber-500/40 leading-none">
-                <Zap className="w-2.5 h-2.5 fill-white" />
+                <Zap className="w-2.5 h-2.5 fill-white" aria-hidden="true" />
                 <span>شگفت‌انگیز</span>
               </span>
             ) : null}
@@ -223,9 +222,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {/* Out-of-stock scrim — the card was previously fully interactive while
               `inStock: false`, and let shoppers add unavailable items to the cart. */}
           {outOfStock ? (
-            <div className="absolute inset-0 z-20 bg-white/55 dark:bg-zinc-950/55 backdrop-blur-[1px] flex items-center justify-center">
+            <div className="absolute inset-0 z-20 bg-white/55 dark:bg-zinc-950/55 backdrop-blur-[1px] flex items-center justify-center" aria-hidden="true">
               <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900/85 dark:bg-zinc-100/90 text-white dark:text-zinc-900 text-[10px] font-black">
-                <PackageX className="w-3 h-3" />
+                <PackageX className="w-3 h-3" aria-hidden="true" />
                 ناموجود
               </span>
             </div>
@@ -236,30 +235,31 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             onClick={handleFavoriteClick}
             aria-pressed={isFavorite}
             aria-label={isFavorite ? 'حذف از علاقه‌مندی‌ها' : 'افزودن به علاقه‌مندی‌ها'}
-            className="absolute bottom-1.5 sm:bottom-2 start-1.5 sm:start-2 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/92 dark:bg-zinc-900/92 backdrop-blur-sm text-slate-400 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 shadow-sm transition-colors cursor-pointer flex items-center justify-center"
+            className="absolute bottom-1.5 sm:bottom-2 start-1.5 sm:start-2 z-30 min-w-[44px] min-h-[44px] w-11 h-11 rounded-full bg-white/92 dark:bg-zinc-900/92 backdrop-blur-sm text-slate-400 hover:text-red-500 dark:text-zinc-400 dark:hover:text-red-400 shadow-sm transition-colors cursor-pointer flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-400"
           >
             <Heart
-              className={`w-3 h-3 sm:w-3.5 sm:h-3.5 transition-all duration-200 ${
+              aria-hidden="true"
+              className={`w-4 h-4 transition-transform duration-200 ${
                 isFavorite ? 'fill-red-500 text-red-500 scale-110' : ''
               }`}
             />
           </button>
         </div>
 
-        <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-100 line-clamp-2 mb-1.5 sm:mb-2 text-right leading-snug sm:leading-relaxed group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200"
+        <h3 className="text-xs sm:text-sm font-bold text-slate-800 dark:text-zinc-100 line-clamp-2 mb-1.5 sm:mb-2 text-right leading-snug sm:leading-relaxed group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors duration-200 text-balance"
           style={{ minHeight: 'calc(2 * 1.4em)' }}
         >
-          <Link href={detailHref} className="focus-visible:outline-none">
+          <span aria-hidden="false">
             {product.title}
-          </Link>
+          </span>
         </h3>
 
         {product.rating ? (
-          <div className="flex items-center gap-1 text-[11px] sm:text-xs text-amber-500 font-bold justify-start mb-1.5">
-            <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-400 text-amber-400" aria-hidden />
-            <span>{toPersianDigits(product.rating)}</span>
+          <div className="flex items-center gap-1 text-[11px] sm:text-xs text-amber-500 font-bold justify-start mb-1.5" role="img" aria-label={`امتیاز ${toPersianDigits(product.rating)} از ۵${product.reviewsCount ? `، ${toPersianDigits(product.reviewsCount)} دیدگاه` : ''}`}>
+            <Star className="w-3 h-3 sm:w-3.5 sm:h-3.5 fill-amber-400 text-amber-400" aria-hidden="true" />
+            <span aria-hidden="true">{toPersianDigits(product.rating)}</span>
             {product.reviewsCount ? (
-              <span className="text-slate-400 dark:text-zinc-500 font-normal text-[10px]">
+              <span className="text-slate-400 dark:text-zinc-500 font-normal text-[10px]" aria-hidden="true">
                 ({toPersianDigits(product.reviewsCount)})
               </span>
             ) : null}
@@ -294,7 +294,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           {outOfStock ? (
             <div
               key="oos"
-              className="w-full h-9 sm:h-10 md:h-11 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 text-[11px] sm:text-xs font-bold flex items-center justify-center"
+              className="w-full min-h-[44px] h-11 sm:h-12 rounded-xl sm:rounded-2xl bg-slate-100 dark:bg-zinc-800 text-slate-400 dark:text-zinc-500 text-[11px] sm:text-xs font-bold flex items-center justify-center"
             >
               ناموجود
             </div>
@@ -305,30 +305,32 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               animate={reduceMotion ? undefined : { opacity: 1, scale: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, scale: 0.92, y: 4 }}
               transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 30 }}
-              className="flex items-center justify-between h-9 sm:h-10 md:h-11 w-full rounded-xl sm:rounded-2xl bg-emerald-500/12 dark:bg-emerald-950/55 border border-emerald-500/35 p-1"
+              className="flex items-center justify-between min-h-[44px] h-11 sm:h-12 w-full rounded-xl sm:rounded-2xl bg-emerald-500/12 dark:bg-emerald-950/55 border border-emerald-500/35 p-1"
+              role="group"
+              aria-label={`تعداد ${product.title} در سبد: ${toPersianDigits(cartQty)}`}
             >
               <button
                 type="button"
                 onClick={handleIncrement}
                 disabled={atStockLimit}
-                className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg sm:rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm shadow-emerald-600/30 cursor-pointer hover:bg-emerald-500 active:scale-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed"
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg sm:rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-sm shadow-emerald-600/30 cursor-pointer hover:bg-emerald-500 active:scale-90 transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1"
                 aria-label={atStockLimit ? 'به سقف موجودی رسیده‌اید' : 'افزایش تعداد'}
               >
-                <Plus className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={2.5} aria-hidden />
+                <Plus className="w-4 h-4" strokeWidth={2.5} aria-hidden="true" />
               </button>
 
-              <div className="flex flex-col items-center px-1">
+              <div className="flex flex-col items-center px-1" aria-live="polite" aria-atomic="true">
                 <motion.span
                   key={cartQty}
                   initial={reduceMotion ? false : { y: -5, opacity: 0 }}
                   animate={reduceMotion ? undefined : { y: 0, opacity: 1 }}
                   transition={{ duration: 0.12 }}
                   className="text-xs sm:text-sm font-black text-emerald-700 dark:text-emerald-300 tabular-nums"
-                  aria-live="polite"
+                  aria-hidden="true"
                 >
                   {toPersianDigits(cartQty)}
                 </motion.span>
-                <span className="text-[8px] text-slate-400 dark:text-zinc-500 font-medium hidden sm:block leading-none -mt-0.5">
+                <span className="text-[8px] text-slate-400 dark:text-zinc-500 font-medium hidden sm:block leading-none -mt-0.5" aria-hidden="true">
                   در سبد
                 </span>
               </div>
@@ -336,13 +338,13 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               <button
                 type="button"
                 onClick={handleDecrement}
-                className="w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center border border-slate-200 dark:border-zinc-700 shadow-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-700 active:scale-90 transition-colors"
+                className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-lg sm:rounded-xl bg-white dark:bg-zinc-800 text-slate-700 dark:text-zinc-200 flex items-center justify-center border border-slate-200 dark:border-zinc-700 shadow-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-zinc-700 active:scale-90 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1"
                 aria-label={cartQty <= 1 ? 'حذف از سبد' : 'کاهش تعداد'}
               >
                 {cartQty <= 1 ? (
-                  <Trash2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-red-500" aria-hidden />
+                  <Trash2 className="w-4 h-4 text-red-500" aria-hidden="true" />
                 ) : (
-                  <Minus className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden />
+                  <Minus className="w-4 h-4" aria-hidden="true" />
                 )}
               </button>
             </motion.div>
@@ -356,7 +358,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
               exit={reduceMotion ? undefined : { opacity: 0, scale: 0.92, y: 4 }}
               whileTap={hoverScale(0.94)}
               transition={reduceMotion ? { duration: 0 } : { type: 'spring', stiffness: 500, damping: 30 }}
-              className={`w-full h-9 sm:h-10 md:h-11 rounded-xl sm:rounded-2xl text-white text-[11px] sm:text-xs md:text-sm font-bold shadow-sm transition-all duration-200 flex items-center justify-center gap-1.5 cursor-pointer ripple-container overflow-hidden ${
+              className={`w-full min-h-[44px] h-11 sm:h-12 rounded-xl sm:rounded-2xl text-white text-[11px] sm:text-xs md:text-sm font-bold shadow-sm transition-colors duration-200 flex items-center justify-center gap-1.5 cursor-pointer overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400 focus-visible:ring-offset-1 ${
                 justAdded
                   ? 'bg-emerald-600 shadow-emerald-600/30'
                   : 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 shadow-emerald-600/20 hover:shadow-md hover:shadow-emerald-600/25'
@@ -371,7 +373,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     exit={reduceMotion ? undefined : { scale: 0.6, opacity: 0 }}
                     className="flex items-center gap-1.5"
                   >
-                    <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" strokeWidth={3} aria-hidden />
+                    <Check className="w-4 h-4" strokeWidth={3} aria-hidden="true" />
                     <span>افزوده شد</span>
                   </motion.span>
                 ) : (
@@ -382,7 +384,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({
                     exit={reduceMotion ? undefined : { scale: 0.6, opacity: 0 }}
                     className="flex items-center gap-1.5"
                   >
-                    <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" aria-hidden />
+                    <ShoppingCart className="w-4 h-4" aria-hidden="true" />
                     <span>افزودن به سبد</span>
                   </motion.span>
                 )}

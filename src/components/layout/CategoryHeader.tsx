@@ -49,20 +49,20 @@ export const CategoryHeader: React.FC<CategoryHeaderProps> = ({
 
   return (
     <header className="sticky top-0 z-40 w-full glass-effect bg-white/85 dark:bg-zinc-900/85 backdrop-blur-md shadow-sm border-b border-slate-200/80 dark:border-zinc-800 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
         {/* Back Button & Title */}
         <div className="flex items-center gap-2.5">
           <button
             type="button"
             onClick={handleBack}
-            className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
             aria-label="بازگشت"
           >
-            <ArrowRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+            <ArrowRight className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
           </button>
-          <h2 className="text-lg font-black gradient-text tracking-tight">
+          <h1 className="text-lg font-black gradient-text tracking-tight text-balance">
             {title}
-          </h2>
+          </h1>
         </div>
 
         {/* Action Controls: Search + Cart */}
@@ -71,10 +71,10 @@ export const CategoryHeader: React.FC<CategoryHeaderProps> = ({
             <button
               type="button"
               onClick={onSearchClick}
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+              className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl flex items-center justify-center text-slate-600 dark:text-zinc-400 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
               aria-label="جستجو"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
 
@@ -82,12 +82,12 @@ export const CategoryHeader: React.FC<CategoryHeaderProps> = ({
             <button
               type="button"
               onClick={onCartClick}
-              className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center shadow-sm active:scale-95 transition-all cursor-pointer"
-              aria-label="سبد خرید"
+              className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center shadow-sm active:scale-95 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              aria-label={cartCount > 0 ? `سبد خرید، ${toPersianDigits(cartCount)} کالا` : 'سبد خرید، خالی'}
             >
-              <ShoppingBag className="w-4 h-4" />
+              <ShoppingBag className="w-4 h-4" aria-hidden="true" />
               {cartCount > 0 && (
-                <span className="cart-badge floating absolute -top-1.5 -end-1.5 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white shadow-sm">
+                <span aria-hidden="true" className="absolute -top-1.5 -end-1.5 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white shadow-sm tabular-nums">
                   {toPersianDigits(cartCount)}
                 </span>
               )}
@@ -95,12 +95,12 @@ export const CategoryHeader: React.FC<CategoryHeaderProps> = ({
           ) : (
             <Link
               href="/cart"
-              className="relative w-9 h-9 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center shadow-sm active:scale-95 transition-all cursor-pointer"
-              aria-label="سبد خرید"
+              className="relative min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white flex items-center justify-center shadow-sm active:scale-95 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
+              aria-label={cartCount > 0 ? `سبد خرید، ${toPersianDigits(cartCount)} کالا` : 'سبد خرید، خالی'}
             >
-              <ShoppingBag className="w-4 h-4" />
+              <ShoppingBag className="w-4 h-4" aria-hidden="true" />
               {cartCount > 0 && (
-                <span className="cart-badge floating absolute -top-1.5 -end-1.5 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white shadow-sm">
+                <span aria-hidden="true" className="absolute -top-1.5 -end-1.5 flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-orange-500 text-[10px] font-bold text-white shadow-sm tabular-nums">
                   {toPersianDigits(cartCount)}
                 </span>
               )}

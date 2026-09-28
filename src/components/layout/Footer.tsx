@@ -73,9 +73,9 @@ export function Footer() {
                 <MoonMarketLogo size="sm" />
               </div>
               <div>
-                <h4 className="font-black text-slate-800 dark:text-zinc-100 text-sm leading-tight">
+                <h2 className="font-black text-slate-800 dark:text-zinc-100 text-sm leading-tight">
                   فروشگاه‌های زنجیره‌ای مون مارکت
-                </h4>
+                </h2>
                 <span className="text-[11px] text-emerald-600 dark:text-emerald-400 font-bold">
                   ارسال اکسپرس مایحتاج روزمره
                 </span>
@@ -89,10 +89,10 @@ export function Footer() {
             <div className="space-y-2">
               <a
                 href="tel:02191001234"
-                className="flex items-center gap-2.5 group w-fit"
+                className="flex items-center gap-2.5 group w-fit min-h-[44px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 rounded-xl"
               >
                 <div className="w-8 h-8 rounded-xl bg-emerald-500/10 flex items-center justify-center shrink-0 group-hover:bg-emerald-500/20 transition-colors">
-                  <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
+                  <Phone className="w-4 h-4 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
                 </div>
                 <div>
                   <div className="text-[10px] text-slate-400 dark:text-zinc-500 leading-none mb-0.5">پشتیبانی تلفنی</div>
@@ -104,7 +104,7 @@ export function Footer() {
 
               <div className="flex items-center gap-2.5">
                 <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
-                  <MapPin className="w-4 h-4 text-slate-500 dark:text-zinc-400" />
+                  <MapPin className="w-4 h-4 text-slate-500 dark:text-zinc-400" aria-hidden="true" />
                 </div>
                 <div className="text-[11px] text-slate-500 dark:text-zinc-400 leading-tight">
                   شعب سراسر تهران و کلانشهرها
@@ -118,10 +118,10 @@ export function Footer() {
                 <a
                   key={label}
                   href={href}
-                  title={label}
-                  className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-800 hover:bg-emerald-500/15 dark:hover:bg-emerald-500/15 text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center transition-all duration-200 hover:scale-105"
+                  aria-label={label}
+                  className="min-w-[44px] min-h-[44px] w-11 h-11 rounded-xl bg-slate-100 dark:bg-zinc-800 hover:bg-emerald-500/15 dark:hover:bg-emerald-500/15 text-slate-500 dark:text-zinc-400 hover:text-emerald-600 dark:hover:text-emerald-400 flex items-center justify-center transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
                 >
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4" aria-hidden="true" />
                 </a>
               ))}
             </div>
@@ -129,9 +129,9 @@ export function Footer() {
 
           {/* Customer Service */}
           <div className="md:col-span-2 space-y-3.5">
-            <h4 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
+            <h2 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
               خدمات مشتریان
-            </h4>
+            </h2>
             <ul className="space-y-2.5">
               {footerLinks.service.map((link) => (
                 <li key={link.label}>
@@ -148,9 +148,9 @@ export function Footer() {
 
           {/* Shopping Guide */}
           <div className="md:col-span-2 space-y-3.5">
-            <h4 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
+            <h2 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
               راهنمای خرید
-            </h4>
+            </h2>
             <ul className="space-y-2.5">
               {footerLinks.guide.map((link) => (
                 <li key={link.label}>
@@ -167,9 +167,9 @@ export function Footer() {
 
           {/* Trust Badges */}
           <div className="md:col-span-4 space-y-4">
-            <h4 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
+            <h2 className="font-bold text-slate-800 dark:text-zinc-100 text-sm border-b border-slate-100 dark:border-zinc-800 pb-2">
               نمادهای اعتماد
-            </h4>
+            </h2>
             <div className="grid grid-cols-2 gap-2.5">
               {trustBadges.map(({ icon: Icon, title, sub }) => (
                 <div
@@ -177,7 +177,7 @@ export function Footer() {
                   className="p-3 rounded-2xl bg-white dark:bg-zinc-900 border border-slate-200/70 dark:border-zinc-800 text-center flex flex-col items-center gap-1.5 hover:border-emerald-500/30 transition-colors group"
                 >
                   <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center group-hover:bg-emerald-500/20 transition-colors">
-                    <Icon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                    <Icon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" aria-hidden="true" />
                   </div>
                   <span className="font-bold text-[11px] text-slate-800 dark:text-zinc-200 leading-tight">{title}</span>
                   <span className="text-[9.5px] text-slate-400 dark:text-zinc-500 leading-tight">{sub}</span>
@@ -191,7 +191,7 @@ export function Footer() {
                 عضو شو، ۱۵٪ تخفیف اول بگیر
               </p>
               {newsletterState === 'done' ? (
-                <p className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
+                <p role="status" className="text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
                   {newsletterMessage}
                 </p>
               ) : (
@@ -201,21 +201,33 @@ export function Footer() {
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
-                      placeholder="شماره موبایل"
+                      placeholder="شماره موبایل…"
                       aria-label="شماره موبایل برای عضویت در خبرنامه"
-                      className="flex-1 h-8 px-3 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                      name="newsletter-phone"
+                      autoComplete="tel"
+                      inputMode="tel"
+                      spellCheck={false}
+                      aria-describedby={newsletterState === 'error' ? 'newsletter-error' : undefined}
+                      aria-invalid={newsletterState === 'error'}
+                      className="flex-1 min-h-[44px] h-11 px-3 rounded-xl bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-sm text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                       dir="ltr"
                     />
                     <button
                       type="submit"
                       disabled={newsletterState === 'sending'}
-                      className="h-8 px-3 rounded-xl bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-500 disabled:opacity-60 transition-colors shrink-0 cursor-pointer"
+                      aria-busy={newsletterState === 'sending'}
+                      className="min-h-[44px] h-11 px-4 rounded-xl bg-emerald-600 text-white text-[11px] font-bold hover:bg-emerald-500 disabled:opacity-60 transition-colors shrink-0 cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
                     >
-                      {newsletterState === 'sending' ? '...' : 'ارسال'}
+                      {newsletterState === 'sending' ? (
+                        <>
+                          <span aria-hidden="true">در حال ارسال…</span>
+                          <span className="sr-only">در حال ارسال…</span>
+                        </>
+                      ) : 'ارسال'}
                     </button>
                   </div>
                   {newsletterState === 'error' && (
-                    <p className="text-[10px] font-bold text-rose-500 pt-1.5">{newsletterMessage}</p>
+                    <p id="newsletter-error" role="alert" className="text-[10px] font-bold text-rose-500 pt-1.5">{newsletterMessage}</p>
                   )}
                 </form>
               )}
@@ -227,7 +239,7 @@ export function Footer() {
         <div className="mt-8 pt-5 border-t border-slate-100 dark:border-zinc-800/80 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-400 dark:text-zinc-500 pb-24 md:pb-6">
           <span>تمامی حقوق مادی و معنوی متعلق به فروشگاه‌های زنجیره‌ای مون مارکت می‌باشد.</span>
           <span className="flex items-center gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block animate-pulse" />
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block motion-reduce:animate-none animate-pulse" aria-hidden="true" />
             نسخه ۲.۴.۰
           </span>
         </div>

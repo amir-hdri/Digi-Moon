@@ -33,22 +33,35 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   return (
-    <section className={`w-full ${className}`}>
+    <div className={`w-full ${className}`}>
       <div className="relative w-full max-w-3xl mx-auto">
-        <div className="relative flex items-center group">
+        <form
+          role="search"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit?.(value);
+          }}
+          className="relative flex items-center group"
+        >
           {/* Search Icon */}
-          <div className="absolute start-4 pointer-events-none text-emerald-500 dark:text-emerald-400 transition-colors group-focus-within:text-emerald-600">
-            <Search className="w-5 h-5" />
+          <div className="absolute start-4 pointer-events-none text-emerald-500 dark:text-emerald-400 transition-colors group-focus-within:text-emerald-600" aria-hidden="true">
+            <Search className="w-5 h-5" aria-hidden="true" />
           </div>
 
           {/* Search Input */}
+          <label htmlFor="catalog-search" className="sr-only">جستجو در مون مارکت</label>
           <input
-            type="text"
+            id="catalog-search"
+            name="q"
+            type="search"
+            autoComplete="off"
+            inputMode="search"
+            spellCheck={false}
             value={value}
             onChange={(e) => onChange?.(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder={placeholder}
-            className="w-full rounded-2xl py-3.5 ps-12 pe-11 text-xs sm:text-sm font-medium text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 liquid-glass border border-slate-200/80 dark:border-zinc-800 shadow-sm hover:shadow-md transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
+            placeholder={`${placeholder}…`}
+            className="w-full rounded-2xl py-3.5 ps-12 pe-14 text-sm font-medium text-slate-800 dark:text-zinc-100 placeholder-slate-400 dark:placeholder-zinc-500 liquid-glass border border-slate-200/80 dark:border-zinc-800 shadow-sm hover:shadow-md transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500"
           />
 
           {/* Clear Button */}
@@ -56,15 +69,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             <button
               type="button"
               onClick={handleClear}
-              className="absolute end-3.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-200/60 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
-              title="پاک کردن متن"
+              className="absolute end-2 min-w-[44px] min-h-[44px] flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-zinc-200 hover:bg-slate-200/60 dark:hover:bg-zinc-800 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
+              aria-label="پاک کردن متن جستجو"
             >
-              <X className="w-4 h-4" />
+              <X className="w-4 h-4" aria-hidden="true" />
             </button>
           )}
-        </div>
+        </form>
       </div>
-    </section>
+    </div>
   );
 };
 export default SearchBar;

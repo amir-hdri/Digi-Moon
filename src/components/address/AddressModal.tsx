@@ -112,13 +112,16 @@ export const AddressModal: React.FC<AddressModalProps> = ({
         {visibleAddresses.map((addr) => {
           const isSelected = String(addr.id) === String(activeId);
           return (
-            <div
+            <button
               key={addr.id}
+              type="button"
               onClick={() => {
                 onSelectAddress?.(addr);
                 onClose();
               }}
-              className={`relative cursor-pointer rounded-2xl border p-4 transition-all duration-200 text-right ${
+              aria-pressed={isSelected}
+              aria-label={`انتخاب نشانی ${addr.title}`}
+              className={`relative w-full cursor-pointer rounded-2xl border p-4 transition-colors duration-200 text-right focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 ${
                 isSelected
                   ? 'border-emerald-500 bg-emerald-50/50 dark:bg-emerald-950/20 shadow-sm'
                   : 'border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-800/60 hover:border-slate-300 dark:hover:border-zinc-700'
@@ -127,17 +130,18 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               <div className="flex items-start justify-between gap-3">
                 <div className="flex items-center gap-2">
                   <span
+                    aria-hidden="true"
                     className={`flex h-5 w-5 items-center justify-center rounded-full border ${
                       isSelected
                         ? 'border-emerald-500 bg-emerald-500 text-white'
                         : 'border-slate-300 dark:border-zinc-600'
                     }`}
                   >
-                    {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                    {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" aria-hidden="true" />}
                   </span>
-                  <h4 className="font-bold text-sm text-slate-800 dark:text-zinc-100">
+                  <span className="font-bold text-sm text-slate-800 dark:text-zinc-100">
                     {addr.title}
-                  </h4>
+                  </span>
                 </div>
 
                 {addr.isDefault && (
@@ -147,15 +151,15 @@ export const AddressModal: React.FC<AddressModalProps> = ({
                 )}
               </div>
 
-              <p className="mt-2 text-xs leading-relaxed text-slate-600 dark:text-zinc-300">
+              <span className="mt-2 block text-xs leading-relaxed text-slate-600 dark:text-zinc-300">
                 {addr.fullAddress}
-              </p>
+              </span>
 
-              <div className="mt-3 flex items-center justify-between text-[11px] text-slate-400 dark:text-zinc-400 border-t border-slate-100 dark:border-zinc-800/80 pt-2">
+              <span className="mt-3 flex items-center justify-between text-[11px] text-slate-400 dark:text-zinc-400 border-t border-slate-100 dark:border-zinc-800/80 pt-2">
                 <span>گیرنده: {addr.receiverName}</span>
                 <span>تلفن: {toPersianDigits(addr.receiverPhone)}</span>
-              </div>
-            </div>
+              </span>
+            </button>
           );
         })}
 
@@ -164,9 +168,9 @@ export const AddressModal: React.FC<AddressModalProps> = ({
           <button
             type="button"
             onClick={handleAddClick}
-            className="flex w-full items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 dark:border-zinc-700 p-4 text-xs font-bold text-slate-600 dark:text-zinc-300 hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer"
+            className="flex w-full min-h-[44px] items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-slate-300 dark:border-zinc-700 p-4 text-xs font-bold text-slate-600 dark:text-zinc-300 hover:border-emerald-500 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500"
           >
-            <Plus className="w-4 h-4" />
+            <Plus className="w-4 h-4" aria-hidden="true" />
             افزودن آدرس جدید
           </button>
         )}
@@ -183,51 +187,61 @@ export const AddressModal: React.FC<AddressModalProps> = ({
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="عنوان نشانی (مثلاً منزل)"
+              placeholder="عنوان نشانی (مثلاً منزل)…"
               aria-label="عنوان نشانی"
-              className="w-full h-10 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+              name="address-title"
+              autoComplete="off"
+              className="w-full min-h-[44px] h-11 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 transition-colors"
             />
             <input
               type="text"
               value={fullAddress}
               onChange={(e) => setFullAddress(e.target.value)}
-              placeholder="نشانی کامل"
+              placeholder="نشانی کامل…"
               aria-label="نشانی کامل"
-              className="w-full h-10 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+              name="street-address"
+              autoComplete="street-address"
+              className="w-full min-h-[44px] h-11 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 transition-colors"
             />
             <div className="grid grid-cols-2 gap-2">
               <input
                 type="text"
                 value={receiverName}
                 onChange={(e) => setReceiverName(e.target.value)}
-                placeholder="نام تحویل‌گیرنده"
+                placeholder="نام تحویل‌گیرنده…"
                 aria-label="نام تحویل‌گیرنده"
-                className="h-10 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 transition-colors"
+                name="receiver-name"
+                autoComplete="off"
+                className="min-h-[44px] h-11 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 transition-colors"
               />
               <input
                 type="tel"
                 value={receiverPhone}
                 onChange={(e) => setReceiverPhone(e.target.value)}
-                placeholder="۰۹۱۲۳۴۵۶۷۸۹"
+                placeholder="۰۹۱۲۳۴۵۶۷۸۹…"
                 aria-label="شماره موبایل تحویل‌گیرنده"
+                name="receiver-phone"
+                autoComplete="tel"
+                inputMode="tel"
+                spellCheck={false}
                 dir="ltr"
-                className="h-10 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 transition-colors text-left font-mono"
+                className="min-h-[44px] h-11 px-3 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-xs text-slate-800 dark:text-zinc-100 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-2 focus:ring-emerald-400/20 transition-colors text-left font-mono"
               />
             </div>
             {formError && (
-              <p className="text-[11px] font-bold text-rose-500">{formError}</p>
+              <p role="alert" className="text-[11px] font-bold text-rose-500">{formError}</p>
             )}
             <div className="flex gap-2">
               <button
                 type="submit"
-                className="flex-1 h-10 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition-colors cursor-pointer"
+                className="flex-1 min-h-[44px] h-11 rounded-xl bg-emerald-600 text-white text-xs font-bold hover:bg-emerald-500 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               >
                 ذخیره نشانی
               </button>
               <button
                 type="button"
                 onClick={() => setShowForm(false)}
-                className="h-10 px-4 rounded-xl bg-slate-200 dark:bg-zinc-700 text-xs font-bold text-slate-600 dark:text-zinc-200 hover:bg-slate-300 dark:hover:bg-zinc-600 transition-colors cursor-pointer"
+                className="min-h-[44px] h-11 px-4 rounded-xl bg-slate-200 dark:bg-zinc-700 text-xs font-bold text-slate-600 dark:text-zinc-200 hover:bg-slate-300 dark:hover:bg-zinc-600 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-400"
               >
                 انصراف
               </button>
