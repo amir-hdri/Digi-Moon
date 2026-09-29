@@ -94,8 +94,8 @@ export function Testimonials() {
                     <span className="text-xs font-bold text-slate-800 dark:text-zinc-100 block truncate">
                       {t.name}
                     </span>
-                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-0.5">
-                      <CheckCircle2 className="w-3 h-3" /> خریدار تایید‌شده
+                    <span className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
+                      <CheckCircle2 className="w-3 h-3 shrink-0" aria-hidden="true" /> خریدار تایید‌شده
                     </span>
                   </div>
                 </div>
@@ -110,12 +110,12 @@ export function Testimonials() {
                 </div>
               </div>
 
-              <blockquote className="relative text-xs text-slate-600 dark:text-zinc-300 leading-relaxed text-right m-0">
+              <blockquote className="flex gap-2 text-xs text-slate-600 dark:text-zinc-300 leading-relaxed m-0">
                 <MessageSquareQuote
-                  className="w-4 h-4 text-slate-300 dark:text-zinc-700 absolute -top-1 -start-1"
-                  aria-hidden
+                  className="w-5 h-5 mt-0.5 shrink-0 text-emerald-600/30 dark:text-emerald-400/30"
+                  aria-hidden="true"
                 />
-                {t.quote}
+                <p className="m-0">{t.quote}</p>
               </blockquote>
             </div>
 
