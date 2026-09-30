@@ -205,7 +205,7 @@ export default function CartPage() {
             <div className="pt-2">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/25 hover:from-emerald-700 hover:to-emerald-800 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white font-bold text-xs shadow-md shadow-emerald-600/25 hover:from-emerald-700 hover:to-emerald-800 transition cursor-pointer"
               >
                 <ArrowRight className="w-4 h-4" />
                 <span>شروع خرید از فروشگاه</span>
@@ -225,7 +225,7 @@ export default function CartPage() {
                 return (
                   <div
                     key={`${product.id}-${colorObj?.name || 'default'}`}
-                    className="p-4 rounded-2xl liquid-glass-card bg-white/90 dark:bg-zinc-900/90 border border-slate-200/80 dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row items-center gap-4 transition-all"
+                    className="p-4 rounded-2xl liquid-glass-card bg-white/90 dark:bg-zinc-900/90 border border-slate-200/80 dark:border-zinc-800 shadow-sm flex flex-col sm:flex-row items-center gap-4 transition"
                   >
                     {/* Thumbnail */}
                     <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-50 dark:bg-zinc-800/60 p-2 shrink-0 flex items-center justify-center border border-slate-100 dark:border-zinc-800">
@@ -415,7 +415,7 @@ export default function CartPage() {
                   onClick={() => void handleCheckout()}
                   disabled={placingOrder || hasStockConflict}
                   aria-describedby={hasStockConflict ? 'cart-stock-alert' : undefined}
-                  className="w-full min-h-[48px] py-3.5 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/25 hover:from-emerald-700 hover:to-emerald-800 active:scale-98 transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  className="w-full min-h-[48px] py-3.5 rounded-2xl bg-gradient-to-br from-emerald-600 to-emerald-700 text-white font-bold text-sm shadow-md shadow-emerald-600/25 hover:from-emerald-700 hover:to-emerald-800 active:scale-98 transition cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                 >
                   <Sparkles className="w-4 h-4" aria-hidden />
                   <span>

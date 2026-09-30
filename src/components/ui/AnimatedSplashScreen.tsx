@@ -60,7 +60,9 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
           exit={{
             opacity: 0,
             scale: 1.06,
-            filter: 'blur(18px)',
+            // NOTE: no `filter: blur()` here — animating a full-viewport filter
+            // forces a per-frame raster of the whole subtree and drops frames
+            // on mobile right as the shop is revealed. Opacity + scale composite.
             transition: { duration: 0.65, ease: EASE_OUT_EXPO },
           }}
           className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden select-none"
@@ -73,19 +75,19 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
           <motion.div
             animate={reduce ? undefined : { scale: [1, 1.22, 1], opacity: [0.3, 0.55, 0.3] }}
             transition={{ repeat: Infinity, duration: 5, ease: 'easeInOut' }}
-            className="absolute -top-32 -right-32 w-[42rem] h-[42rem] bg-gradient-to-br from-emerald-400/30 via-teal-400/12 to-transparent rounded-full blur-[130px] pointer-events-none"
+            className="absolute -top-32 -right-32 w-[42rem] h-[42rem] bg-gradient-to-br from-emerald-400/30 via-teal-400/12 to-transparent rounded-full blur-[96px] pointer-events-none"
             aria-hidden
           />
           <motion.div
             animate={reduce ? undefined : { scale: [1.18, 1, 1.18], opacity: [0.2, 0.42, 0.2] }}
             transition={{ repeat: Infinity, duration: 6, ease: 'easeInOut', delay: 0.6 }}
-            className="absolute -bottom-32 -left-32 w-[42rem] h-[42rem] bg-gradient-to-tr from-rose-500/22 via-red-500/10 to-transparent rounded-full blur-[130px] pointer-events-none"
+            className="absolute -bottom-32 -left-32 w-[42rem] h-[42rem] bg-gradient-to-tr from-rose-500/22 via-red-500/10 to-transparent rounded-full blur-[96px] pointer-events-none"
             aria-hidden
           />
           <motion.div
             animate={reduce ? undefined : { opacity: [0.5, 0.8, 0.5] }}
             transition={{ repeat: Infinity, duration: 4, ease: 'easeInOut' }}
-            className="absolute inset-0 m-auto w-[30rem] h-[30rem] bg-gradient-to-r from-emerald-400/18 via-teal-300/12 to-emerald-500/12 rounded-full blur-[100px] pointer-events-none"
+            className="absolute inset-0 m-auto w-[30rem] h-[30rem] bg-gradient-to-r from-emerald-400/18 via-teal-300/12 to-emerald-500/12 rounded-full blur-[72px] pointer-events-none"
             aria-hidden
           />
 

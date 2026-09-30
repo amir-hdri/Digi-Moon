@@ -1,9 +1,11 @@
 'use client';
 
+import { useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Flame, Clock } from 'lucide-react';
 import { ProductCard } from '@/components/catalog/ProductCard';
 import { useDealCountdown } from '@/hooks/useDealCountdown';
+import { usePauseAnimationsOffscreen } from '@/hooks/usePauseAnimationsOffscreen';
 import { mockFestivalProducts } from '@/data/mock-data';
 import { toPersianDigits } from '@/lib/persian';
 import type { Product } from '@/types';
@@ -31,9 +33,13 @@ function TimerCell({ value, label, urgent }: { value: string; label: string; urg
 export function FestivalDeals({ onAddToCart }: { onAddToCart: (product: Product) => void }) {
   const reduceMotion = useReducedMotion();
   const { hours, minutes, seconds, isUrgent, expired } = useDealCountdown();
+  const sectionRef = useRef<HTMLElement>(null);
+  // Stop the glow blobs + flame wobble while this section is off-screen.
+  usePauseAnimationsOffscreen(sectionRef);
 
   return (
     <motion.section
+      ref={sectionRef}
       id="festival-deals"
       initial={reduceMotion ? false : { opacity: 0, scale: 0.98 }}
       whileInView={reduceMotion ? undefined : { opacity: 1, scale: 1 }}

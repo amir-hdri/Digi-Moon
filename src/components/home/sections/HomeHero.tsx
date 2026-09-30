@@ -1,10 +1,12 @@
 'use client';
 
 import Image from 'next/image';
+import { useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Sparkles } from 'lucide-react';
 import { DigiMoonAnimatedLogo } from '@/components/ui/DigiMoonAnimatedLogo';
 import { BRAND_LOGOS, isRasterBrandLogo, type BrandLogo } from '@/lib/brand-logos';
+import { usePauseAnimationsOffscreen } from '@/hooks/usePauseAnimationsOffscreen';
 
 /**
  * Liquid-glass chip: milky, slightly frosted pane with a specular top sheen
@@ -122,6 +124,11 @@ function BrandRain() {
 
 export function HomeHero() {
   const reduceMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  // Suspend the ~17 infinite loops (rain, glows, float, shine, comet) while
+  // the hero is off-screen so they don't burn mobile GPU while the user
+  // browses the catalog below.
+  usePauseAnimationsOffscreen(sectionRef);
   const loop = (duration: number) =>
     reduceMotion
       ? {}
@@ -129,6 +136,7 @@ export function HomeHero() {
 
   return (
     <motion.section
+      ref={sectionRef}
       initial={reduceMotion ? false : { opacity: 0, y: 30 }}
       animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
       transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
