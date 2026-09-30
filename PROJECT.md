@@ -3,13 +3,13 @@
 ## Architecture
 - **Framework**: Next.js 15+ (App Router with Turbopack & React 19)
 - **Styling**: Tailwind CSS v4 (@tailwindcss/postcss) with CSS-first `@theme` and `@custom-variant dark/rtl`
-- **Typography & Localization**: Persian native (`dir="rtl"`, `lang="fa"`) using `@fontsource/vazirmatn` and `IRANSans` fallbacks with OpenType ligatures (`rlig 1, calt 1`)
+- **Typography & Localization**: Persian native (`dir="rtl"`, `lang="fa"`) using self-hosted Vazirmatn woff2 (arabic + latin subsets × weights 400–900 vendored in `public/fonts/vazirmatn`, `font-display: swap`, arabic 400/700/900 preloaded via `<link rel="preload">` in `layout.tsx`; migrated from `@fontsource/vazirmatn` in M7 for stable preloadable URLs) and `IRANSans` fallbacks with OpenType ligatures (`rlig 1, calt 1`)
 - **Theme**: Dual-palette system — Slate palette for Light Mode vs Zinc palette for Dark Mode, with inline anti-FOUC script
 - **Adaptive Dialogs**: UniversalModal system at 580px breakpoint (mobile `<580px` drag-to-dismiss bottom sheet with spring physics; desktop `>=580px` centered dialog)
 - **State Management**: Zustand 5 with localStorage persistence (`useCartStore`, `useThemeStore`, `useAuthStore`, `useToastStore`, `useMessageStore`, `useNotificationStore`, `useOrderStore`; persisted stores rehydrate post-mount via `StoreHydration` to avoid SSR mismatches)
 - **Data Layer**: Robust mock data service (`src/data/mock-data.ts`, `src/data/engagement.ts`) with typed API client (`src/lib/api.ts`) designed for seamless failover when live `api.dijimoon.ir` is unreachable over VPN
 - **Backend (Route Handlers)**: Next.js App Router API routes under `src/app/api/` (`notifications`, `notifications/read`, `threads`, `messages`, `orders`, `newsletter`, `branches`) backed by the engagement DAL (`src/lib/engagement.ts`) with input validation and Persian error messages
-- **Rendering**: Server Components by default; category page is a Server Component; client boundaries pushed to interactive leaves; `next/image` with `sizes`/`priority`; `MotionConfig reducedMotion="user"` globally; Vazirmatn via `@fontsource` (weights 400–900)
+- **Rendering**: Server Components by default; category page is a Server Component; client boundaries pushed to interactive leaves; `next/image` with `sizes`/`priority` (catalog images lazy by default); `MotionConfig reducedMotion="user"` globally; off-screen ambient loops paused via `usePauseAnimationsOffscreen`; splash exits early on critical-fonts readiness; search URL commits in `useTransition`; `experimental.optimizePackageImports` trims barrel parse cost
 
 ## Feature Inventory
 Every feature identified during the Survey phase is enumerated here and assigned to a specific milestone.
@@ -54,13 +54,14 @@ Every feature identified during the Survey phase is enumerated here and assigned
 
 | # | Name | Scope | Dependencies | Status |
 |---|---|---|---|---|
-| M1 | Core Setup & Foundation | Next.js 15 + React 19 + Tailwind v4 root setup, globals.css, Persian typography (`@fontsource/vazirmatn` + IRANSans), Slate/Zinc theme engine, domain types, Persian utilities, and mock data failover layer. | none | DONE |
+| M1 | Core Setup & Foundation | Next.js 15 + React 19 + Tailwind v4 root setup, globals.css, Persian typography (self-hosted Vazirmatn woff2 + IRANSans; originally `@fontsource/vazirmatn`, migrated in M7), Slate/Zinc theme engine, domain types, Persian utilities, and mock data failover layer. | none | DONE |
 | M2 | UniversalModal, Auth & State Stores | UniversalModal 580px adaptive system (drag-to-dismiss bottom sheet on mobile, centered dialog on desktop), LoginModal (11-digit phone OTP + 120s timer), AddressModal (store-backed list + inline add-address form), Zustand stores (Cart, Theme, Auth, Toast). | M1 | DONE |
 | M3 | Catalog, Home Page & Navigation | Sticky glassmorphic Header (theme toggle, notification center, messages link, cart badge), SearchBar, ProductCard (`next/image`, favorites wired to auth store), ProductSkeleton (zero CLS), BottomNavbar, Home page with section islands (`HomeHero`, `CategoryGrid`, `FestivalDeals` with real-clock countdown, `CatalogSection`, `TrustStats`, `Testimonials`), Category Server Component (`app/category/[slug]/page.tsx` + `CategoryView`). | M1, M2 | DONE |
 | M4 | Product Detail, Cart & Profile | Product Detail view (`app/product/[id]/page.tsx`, real `notFound()` for unknown ids, favorite wired), Cart page (real order placement via `POST /api/orders`, persisted `useOrderStore`), Profile view (orders incl. placed orders, favorites from store, addresses, messages tab), ProfileHero, checkout summary. | M2, M3 | DONE |
-| M5 | Final E2E Test Pass & Hardening | Phase 1: 100% pass of E2E test suite (Tiers 1-4). Production build verification (`npm run build`). Tier 5 store-stability spec exists at `tests/e2e/tier5_store_stability.spec.ts` (not yet wired into `tests/runner.js`). | M1, M2, M3, M4, TEST_READY | DONE |
+| M5 | Final E2E Test Pass & Hardening | Phase 1: 100% pass of E2E test suite (Tiers 1-4). Production build verification (`npm run build`). Tier 5 shared-foundations spec (`tests/e2e/tier5_shared_foundations.spec.ts`, real-module coverage incl. `toJalali` cross-check) wired into `tests/runner.js` → 110/110 total. `tier5_store_stability.spec.ts` exists but is still standalone. | M1, M2, M3, M4, TEST_READY | DONE |
 | M6 | Engagement Full-Stack | Notification center (Header bell + `/notifications` page + `useNotificationStore`), support messaging (`/messages` page + `MessagePanel` + `useMessageStore` with optimistic send), branches (`/branches`), support center (`/support`), newsletter API + footer form, API routes for notifications/threads/messages/orders/newsletter/branches. | M4, M5 | DONE |
 | E2E | E2E Testing Track | Requirement-driven opaque-box test suite covering Tiers 1-4 for all 32 features. Publishes `TEST_READY.md`. | none (runs in parallel with M1-M4) | DONE |
+| M7 | Mobile Performance & Hardening | `/categories` page, SearchBar on `/search` with debounced `?q=`, BottomNavbar destinations, RTL drawer/profile spacing, catalog enrichment (28 products, Jalali dates); perf: `usePauseAnimationsOffscreen`, splash exit without fullscreen blur + ready-aware early exit, `transition-all` removal, search `useTransition`, `optimizePackageImports`, self-hosted fonts + preloads, `postcss` override (`npm audit` 0 vulns). Verified on production (mobile 390px, 4× CPU throttling, Lighthouse mobile). | M3, M4, M6 | DONE |
 
 ## Interface Contracts
 
@@ -148,18 +149,20 @@ Every feature identified during the Survey phase is enumerated here and assigned
 /Users/amirheidari/GitHub/Digi-Moon/
 ├── package.json                    (scripts: dev, build, start, lint, type-check, test, verify)
 ├── tsconfig.json
-├── next.config.ts                  (viewTransition experiment)
+├── next.config.ts                  (viewTransition + optimizePackageImports experiments; images.remotePatterns for api.dijimoon.ir / unsplash)
 ├── postcss.config.mjs
 ├── public/
 │   ├── favicon.ico
 │   ├── logo.png
 │   ├── logo-moonmarket.svg/.png/.jpg
+│   ├── fonts/vazirmatn/             (12 self-hosted woff2: arabic + latin × 400–900, vendored from @fontsource)
 │   ├── official-logo.jpg
 │   ├── daily-market-official-logo.png
 │   └── manifest.json
 ├── src/
 │   ├── app/
-│   │   ├── layout.tsx                (RTL, Vazirmatn, anti-FOUC, MotionProvider, StoreHydration)
+│   │   ├── layout.tsx                (RTL, self-hosted Vazirmatn + font preloads, anti-FOUC, MotionProvider, StoreHydration)
+│   │   ├── vazirmatn.css             (12 @font-face blocks, font-display: swap, exact @fontsource unicode-ranges)
 │   │   ├── globals.css
 │   │   ├── template.tsx              (route transitions, reduced-motion aware)
 │   │   ├── loading.tsx / error.tsx / not-found.tsx
@@ -228,7 +231,8 @@ Every feature identified during the Survey phase is enumerated here and assigned
 │   │   └── useToastStore.ts
 │   ├── hooks/
 │   │   ├── useDealCountdown.ts
-│   │   └── useFocusTrap.ts
+│   │   ├── useFocusTrap.ts
+│   │   └── usePauseAnimationsOffscreen.ts  (IntersectionObserver + getAnimations subtree pause)
 │   ├── lib/
 │   │   ├── persian.ts                (+ timeAgoFa)
 │   │   ├── api.ts
@@ -246,11 +250,12 @@ Every feature identified during the Survey phase is enumerated here and assigned
 │   │   ├── tier2_boundary_corner.spec.ts
 │   │   ├── tier3_pairwise_combinations.spec.ts
 │   │   ├── tier4_real_world_scenarios.spec.ts
+│   │   ├── tier5_shared_foundations.spec.ts  (wired: real-module coverage, toJalali 20-year cross-check)
 │   │   └── tier5_store_stability.spec.ts   (standalone, not wired into runner.js)
 │   ├── fixtures/                         (catalog.fixture.ts, user-session.fixture.ts)
 │   ├── harness.ts
 │   ├── m1_challenger_verification.mjs     (legacy M1 data oracle; partially stale vs FMCG dataset)
-│   └── runner.js                         (tiers 1-4, 100 tests)
+│   └── runner.js                         (tiers 1-5, 110 tests)
 ├── design-system/                      (Reference design system assets)
 └── COMPREHENSIVE_REPORT.md             (Reference reverse engineering report)
 ```

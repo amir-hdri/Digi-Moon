@@ -34,7 +34,9 @@ The Dijimoon Test Infrastructure provides a deterministic, requirement-driven, o
 │       ├── tier1_feature_coverage.spec.ts # Tier 1: Feature Coverage (≥50 tests)
 │       ├── tier2_boundary_corner.spec.ts  # Tier 2: Boundary & Corner Cases (≥30 tests)
 │       ├── tier3_pairwise_combinations.spec.ts # Tier 3: Pairwise Interactions (≥12 tests)
-│       └── tier4_real_world_scenarios.spec.ts  # Tier 4: Real-World User Flows (≥5 tests)
+│       ├── tier4_real_world_scenarios.spec.ts  # Tier 4: Real-World User Flows (≥5 tests)
+│       ├── tier5_shared_foundations.spec.ts    # Tier 5: Real-module coverage, wired into runner.js (10 tests)
+│       └── tier5_store_stability.spec.ts       # Tier 5 (standalone, not wired into runner.js)
 ```
 
 ---

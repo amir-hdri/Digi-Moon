@@ -1,16 +1,16 @@
 # Test Suite Readiness Publication: Dijimoon E-Commerce Storefront
 
 > **Publication Status**: `TEST_READY`
-> **Date**: 2026-09-26 (re-verified; originally published 2026-09-18T02:46:00+03:30)
+> **Date**: 2026-09-30 (re-verified; previously 2026-09-26, originally published 2026-09-18T02:46:00+03:30)
 > **Author**: `e2e_test_writer_1` (teamwork_preview_test_writer)
 > **Test Harness**: Standalone Node.js 20+ Native ESM / TypeScript Runner
-> **Pass Rate**: 100% (100 / 100 tests passing, tiers 1-4 via `npm test`)  
+> **Pass Rate**: 100% (110 / 110 tests passing, tiers 1-5 via `npm test`)  
 
 ---
 
 ## 1. Invocation Command
 
-To execute the complete 4-tier opaque requirement test suite:
+To execute the complete 5-tier opaque requirement test suite:
 
 ```bash
 node tests/runner.js
@@ -22,6 +22,7 @@ node tests/runner.js tier1   # Tier 1: Feature Coverage (53 tests)
 node tests/runner.js tier2   # Tier 2: Boundary & Corner Cases (30 tests)
 node tests/runner.js tier3   # Tier 3: Pairwise Combinations (12 tests)
 node tests/runner.js tier4   # Tier 4: Real-World Scenarios (5 tests)
+node tests/runner.js tier5   # Tier 5: Shared Foundations, real modules (10 tests)
 ```
 
 ---
@@ -34,7 +35,8 @@ node tests/runner.js tier4   # Tier 4: Real-World Scenarios (5 tests)
 | **Tier 2** | **Boundary & Corner Cases** (10/11/12 phone boundaries, non-09 prefixes, OTP timer, empty cart, 0 discount, ZWNJ slug) | 30 | 30 | 0 | 100% | ~6 ms |
 | **Tier 3** | **Cross-Feature Combinations** (Dark mode + modal, cart + floating badge, OTP + profile, search + cards, festival + cart, 580px adaptive) | 12 | 12 | 0 | 100% | ~5 ms |
 | **Tier 4** | **Real-World Scenarios** (Browse-to-checkout flow, visitor auth & address setup, session theme continuity, search & sort, failover resiliency) | 5 | 5 | 0 | 100% | ~4 ms |
-| **TOTAL** | **Full Storefront Specification Coverage** | **100** | **100** | **0** | **100%** | **~20 ms** |
+| **Tier 5** | **Shared Foundations** (real `src/lib` modules: `toJalali` 20-year cross-check vs Intl Persian calendar, catalog resolution, brand facets) | 10 | 10 | 0 | 100% | ~400 ms |
+| **TOTAL** | **Full Storefront Specification Coverage** | **110** | **110** | **0** | **100%** | **~414 ms** |
 
 ---
 
@@ -56,6 +58,7 @@ All test code and fixtures are organized in strict compliance with the code layo
    - `tests/e2e/tier2_boundary_corner.spec.ts` (30 tests)
    - `tests/e2e/tier3_pairwise_combinations.spec.ts` (12 tests)
    - `tests/e2e/tier4_real_world_scenarios.spec.ts` (5 tests)
+   - `tests/e2e/tier5_shared_foundations.spec.ts` (10 tests, wired into `tests/runner.js`)
 
 ---
 
@@ -73,7 +76,9 @@ All expected values in this test suite are strictly grounded in:
 
 This test suite is published and ready for Phase 1 execution of **Milestone 5 (Final E2E Test Pass & Hardening)**. Implementing agents can continuously verify milestone outputs against this suite at any time using `node tests/runner.js` (or `npm test` / `npm run verify` for the full typecheck + lint + test + build chain).
 
-## 6. Notes (2026-09-26 re-verification)
+## 6. Notes (2026-09-30 re-verification)
 
-- `tests/e2e/tier5_store_stability.spec.ts` exists but is **not** wired into `tests/runner.js`; the 100/100 figure covers tiers 1-4 only.
+- `tests/e2e/tier5_shared_foundations.spec.ts` is now wired into `tests/runner.js`; the 110/110 figure covers tiers 1-5.
+- `tests/e2e/tier5_store_stability.spec.ts` exists but is still standalone (not wired into the runner).
 - `tests/m1_challenger_verification.mjs` is a legacy M1 data oracle: it passes 17/28 checks against the current FMCG dataset. The remaining failures are stale expectations from the original electronics catalog (e.g. `smartphones` categories, 10 festival items, 2 addresses, 3 orders, 4 favorites) plus FMCG products lacking the old `specs`/`colors` richness — not regressions in the current app. Do not treat it as a release gate without updating its oracles.
+- Full gate status 2026-09-30: `tsc --noEmit` clean, 110/110 tests, `next lint` exit 0 (one pre-existing unused-var warning in `src/app/profile/page.tsx`), `npm audit` 0 vulnerabilities, production build green.
