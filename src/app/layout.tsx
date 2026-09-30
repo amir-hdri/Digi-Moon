@@ -1,14 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
-// Resilient Persian font loading via @fontsource/vazirmatn
-// Provides complete offline & VPN immunity with zero external Google Fonts network calls during build
-import '@fontsource/vazirmatn/400.css';
-import '@fontsource/vazirmatn/500.css';
-import '@fontsource/vazirmatn/600.css';
-import '@fontsource/vazirmatn/700.css';
-import '@fontsource/vazirmatn/800.css';
-import '@fontsource/vazirmatn/900.css';
+// Self-hosted Persian font: byte-identical Vazirmatn woff2 files vendored
+// into /public/fonts/vazirmatn (arabic + latin subsets). Keeps the offline &
+// VPN immunity of @fontsource with zero external calls, but stable URLs allow
+// preloading the LCP-critical weights instead of discovering them late
+// through hashed _next/static/media URLs.
+import './vazirmatn.css';
 import { ToastContainer } from '@/components/ui/Toast';
 import { MotionProvider } from '@/components/ui/MotionProvider';
 import { ScrollProgressBar } from '@/components/ui/ScrollProgressBar';
@@ -102,6 +100,32 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="fa" dir="rtl" suppressHydrationWarning>
       <head>
+        {/*
+          Preload the LCP-critical Vazirmatn subsets (measured LCP element is
+          hero text). Stable /public URLs make this possible — hashed
+          _next/static/media URLs could not be preloaded.
+        */}
+        <link
+          rel="preload"
+          href="/fonts/vazirmatn/vazirmatn-arabic-400.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/vazirmatn/vazirmatn-arabic-700.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/vazirmatn/vazirmatn-arabic-900.woff2"
+          as="font"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }}
