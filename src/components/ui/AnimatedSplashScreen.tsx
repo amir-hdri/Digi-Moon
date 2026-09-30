@@ -53,16 +53,27 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
     };
     // Hard cap (previous behaviour): never hold the splash past durationMs.
     const maxTimer = setTimeout(finish, durationMs);
-    // Soft gate: once the page is ready (fonts + window load) AND the brand
-    // mark has had its minimum moment, dismiss early so the LCP content is
-    // revealed instead of idling behind the overlay. On slow networks
-    // `document.fonts.ready` resolves late and the max timer wins, which is
+    // Soft gate: once the page is ready (critical fonts + window load) AND
+    // the brand mark has had its minimum moment, dismiss early so the LCP
+    // content is revealed instead of idling behind the overlay.
+    //
+    // NOTE: gate on explicit `fonts.load()` for the preloaded above-fold
+    // weights (400/700/900), NOT on `document.fonts.ready` — the latter also
+    // waits for below-fold weights (500/600/800 in catalog cards) and held
+    // the splash to the max timer on throttled cold loads. On slow networks
+    // the critical loads resolve late and the max timer wins, which is
     // behaviourally identical to before.
     const minTimer = setTimeout(
       () => {
-        const fontsReady =
+        const criticalFontsReady =
           typeof document !== 'undefined' && typeof document.fonts !== 'undefined'
-            ? document.fonts.ready.catch(() => undefined)
+            ? Promise.all([
+                document.fonts.load('400 16px Vazirmatn'),
+                document.fonts.load('700 16px Vazirmatn'),
+                document.fonts.load('900 16px Vazirmatn'),
+              ])
+                .then(() => undefined)
+                .catch(() => undefined)
             : Promise.resolve();
         const loaded =
           document.readyState === 'complete'
@@ -70,7 +81,7 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
             : new Promise<void>((resolve) => {
                 window.addEventListener('load', () => resolve(), { once: true });
               });
-        void Promise.all([fontsReady, loaded]).then(finish);
+        void Promise.all([criticalFontsReady, loaded]).then(finish);
       },
       Math.min(MIN_SPLASH_MS, durationMs)
     );
