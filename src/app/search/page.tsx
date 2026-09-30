@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useEffect, useMemo, useState, Suspense } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, Suspense, useTransition } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { CategoryHeader, BottomNavbar, ProductCard } from '@/components';
@@ -19,6 +19,9 @@ function SearchPageContent() {
   const query = searchParams.get('q') ?? '';
   const addItem = useCartStore((state) => state.addItem);
   const [sort, setSort] = useState<SortKey>('popular');
+  // Non-urgent URL commit: keeps keystrokes responsive while the results
+  // grid (ProductCards + images) re-renders in a concurrent transition.
+  const [isPending, startTransition] = useTransition();
 
   /*
    * The page previously rendered *no* input — it only read `?q=`, so arriving
@@ -37,12 +40,14 @@ function SearchPageContent() {
     if (term === query) return;
     const timeout = setTimeout(() => {
       const next = term.trim();
-      router.replace(next ? `/search?q=${encodeURIComponent(next)}` : '/search', {
-        scroll: false,
+      startTransition(() => {
+        router.replace(next ? `/search?q=${encodeURIComponent(next)}` : '/search', {
+          scroll: false,
+        });
       });
     }, 300);
     return () => clearTimeout(timeout);
-  }, [term, query, router]);
+  }, [term, query, router, startTransition]);
 
   /*
     Replaces `searchAllStoreProducts()`, a fourth copy of the matching rules that used
@@ -122,7 +127,10 @@ function SearchPageContent() {
         ) : null}
 
         {products.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4">
+          <div
+            aria-busy={isPending}
+            className={`grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 transition-opacity duration-150 ${isPending ? 'opacity-60' : 'opacity-100'}`}
+          >
             {products.map((product) => (
               <ProductCard key={product.id} product={product} onAddToCart={handleAdd} />
             ))}

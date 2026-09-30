@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
   },
   experimental: {
     viewTransition: true,
+    // Trim barrel-file parse/eval cost (lucide-react, framer-motion, zustand)
+    // to shorten hydration long tasks on low-end mobile CPUs.
+    optimizePackageImports: [
+      'lucide-react',
+      'framer-motion',
+      'motion',
+      'zustand',
+      'clsx',
+      'tailwind-merge',
+    ],
   },
 };
 

@@ -23,6 +23,12 @@ const STARS = Array.from({ length: 28 }, (_, i) => ({
 const EASE_OUT_EXPO: [number, number, number, number] = [0.16, 1, 0.3, 1];
 
 /**
+ * Minimum brand moment: the splash never exits before this, even on instant
+ * loads, so the mark reveal is never cut off mid-draw.
+ */
+const MIN_SPLASH_MS = 2000;
+
+/**
  * Landing intro: the Digi-Moon mark alone, large, over a deep emerald night sky —
  * it sketches itself in stroke by stroke, fills with brand color, then picks up its
  * orbit ring, gloss sweep and sparkles. Exits with a scale + blur dissolve.
@@ -38,12 +44,42 @@ export const AnimatedSplashScreen: React.FC<AnimatedSplashScreenProps> = ({
   useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
 
   useEffect(() => {
-    const endTimer = setTimeout(() => {
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
       setIsFinished(true);
       onCompleteRef.current?.();
-    }, durationMs);
+    };
+    // Hard cap (previous behaviour): never hold the splash past durationMs.
+    const maxTimer = setTimeout(finish, durationMs);
+    // Soft gate: once the page is ready (fonts + window load) AND the brand
+    // mark has had its minimum moment, dismiss early so the LCP content is
+    // revealed instead of idling behind the overlay. On slow networks
+    // `document.fonts.ready` resolves late and the max timer wins, which is
+    // behaviourally identical to before.
+    const minTimer = setTimeout(
+      () => {
+        const fontsReady =
+          typeof document !== 'undefined' && typeof document.fonts !== 'undefined'
+            ? document.fonts.ready.catch(() => undefined)
+            : Promise.resolve();
+        const loaded =
+          document.readyState === 'complete'
+            ? Promise.resolve()
+            : new Promise<void>((resolve) => {
+                window.addEventListener('load', () => resolve(), { once: true });
+              });
+        void Promise.all([fontsReady, loaded]).then(finish);
+      },
+      Math.min(MIN_SPLASH_MS, durationMs)
+    );
 
-    return () => clearTimeout(endTimer);
+    return () => {
+      done = true;
+      clearTimeout(maxTimer);
+      clearTimeout(minTimer);
+    };
   }, [durationMs]);
 
   const handleSkip = () => {
