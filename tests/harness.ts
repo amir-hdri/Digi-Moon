@@ -10,14 +10,14 @@ import * as path from 'node:path';
 export interface TestCase {
   name: string;
   fn: () => void | Promise<void>;
-  tier: 'tier1' | 'tier2' | 'tier3' | 'tier4';
+  tier: 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'tier5';
   groupName: string;
 }
 
 export interface TestResult {
   name: string;
   groupName: string;
-  tier: 'tier1' | 'tier2' | 'tier3' | 'tier4';
+  tier: 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'tier5';
   passed: boolean;
   durationMs: number;
   error?: Error;
@@ -26,7 +26,7 @@ export interface TestResult {
 export class TestRegistry {
   private static instance: TestRegistry;
   private tests: TestCase[] = [];
-  private currentTier: 'tier1' | 'tier2' | 'tier3' | 'tier4' = 'tier1';
+  private currentTier: 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'tier5' = 'tier1';
   private currentGroup: string = 'General';
 
   public static getInstance(): TestRegistry {
@@ -36,7 +36,7 @@ export class TestRegistry {
     return TestRegistry.instance;
   }
 
-  public setContext(tier: 'tier1' | 'tier2' | 'tier3' | 'tier4', groupName: string) {
+  public setContext(tier: 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'tier5', groupName: string) {
     this.currentTier = tier;
     this.currentGroup = groupName;
   }
@@ -59,7 +59,7 @@ export class TestRegistry {
   }
 }
 
-export function setTestContext(tier: 'tier1' | 'tier2' | 'tier3' | 'tier4', groupName: string) {
+export function setTestContext(tier: 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'tier5', groupName: string) {
   TestRegistry.getInstance().setContext(tier, groupName);
 }
 
@@ -69,18 +69,22 @@ export function test(name: string, fn: () => void | Promise<void>) {
 
 export const it = test;
 
-export function describe(groupName: string, tier: 'tier1' | 'tier2' | 'tier3' | 'tier4', fn: () => void) {
+export function describe(groupName: string, tier: 'tier1' | 'tier2' | 'tier3' | 'tier4' | 'tier5', fn: () => void) {
   setTestContext(tier, groupName);
   fn();
 }
 
 function createExpectation(actual: any) {
+  // NOTE: every message defaults — on modern Node, passing an explicit
+  // `undefined` message to `assert.*` throws ERR_INVALID_ARG_TYPE instead of
+  // reporting the mismatch, which made every failing assertion unreadable.
   return {
-    toBe: (expected: any, msg?: string) => assert.strictEqual(actual, expected, msg),
-    toEqual: (expected: any, msg?: string) => assert.deepStrictEqual(actual, expected, msg),
+    toBe: (expected: any, msg?: string) => assert.strictEqual(actual, expected, msg ?? `Expected ${String(actual)} to be ${String(expected)}`),
+    toEqual: (expected: any, msg?: string) => assert.deepStrictEqual(actual, expected, msg ?? `Expected ${String(actual)} to equal ${String(expected)}`),
+    toHaveLength: (length: number, msg?: string) => assert.strictEqual(actual?.length, length, msg ?? `Expected length ${String(length)}, received ${String(actual?.length)}`),
     toBeTruthy: (msg?: string) => assert.ok(actual, msg || `Expected ${actual} to be truthy`),
     toBeFalsy: (msg?: string) => assert.ok(!actual, msg || `Expected ${actual} to be falsy`),
-    toMatch: (pattern: RegExp, msg?: string) => assert.match(actual, pattern, msg),
+    toMatch: (pattern: RegExp, msg?: string) => assert.match(actual, pattern, msg ?? `Expected ${String(actual)} to match ${String(pattern)}`),
     toContain: (needle: any, msg?: string) => {
       if (typeof actual === 'string') {
         assert.ok(actual.includes(needle), msg || `Expected string to contain "${needle}"`);
@@ -88,9 +92,9 @@ function createExpectation(actual: any) {
         assert.ok(actual.includes(needle), msg || `Expected array to contain item`);
       }
     },
-    toBeGreaterThan: (thresh: number, msg?: string) => assert.ok(actual > thresh, msg),
-    toBeGreaterThanOrEqual: (thresh: number, msg?: string) => assert.ok(actual >= thresh, msg),
-    toBeLessThanOrEqual: (thresh: number, msg?: string) => assert.ok(actual <= thresh, msg),
+    toBeGreaterThan: (thresh: number, msg?: string) => assert.ok(actual > thresh, msg ?? `Expected ${String(actual)} to be greater than ${String(thresh)}`),
+    toBeGreaterThanOrEqual: (thresh: number, msg?: string) => assert.ok(actual >= thresh, msg ?? `Expected ${String(actual)} to be >= ${String(thresh)}`),
+    toBeLessThanOrEqual: (thresh: number, msg?: string) => assert.ok(actual <= thresh, msg ?? `Expected ${String(actual)} to be <= ${String(thresh)}`),
   };
 }
 
@@ -98,11 +102,12 @@ function createExpectation(actual: any) {
 export const expect: any = Object.assign(
   (actual: any) => createExpectation(actual),
   {
-    toBe: (actual: any, expected: any, msg?: string) => assert.strictEqual(actual, expected, msg),
-    toEqual: (actual: any, expected: any, msg?: string) => assert.deepStrictEqual(actual, expected, msg),
+    toBe: (actual: any, expected: any, msg?: string) => assert.strictEqual(actual, expected, msg ?? `Expected ${String(actual)} to be ${String(expected)}`),
+    toEqual: (actual: any, expected: any, msg?: string) => assert.deepStrictEqual(actual, expected, msg ?? `Expected ${String(actual)} to equal ${String(expected)}`),
+    toHaveLength: (actual: any, length: number, msg?: string) => assert.strictEqual(actual?.length, length, msg ?? `Expected length ${String(length)}, received ${String(actual?.length)}`),
     toBeTruthy: (actual: any, msg?: string) => assert.ok(actual, msg),
     toBeFalsy: (actual: any, msg?: string) => assert.ok(!actual, msg),
-    toMatch: (actual: string, pattern: RegExp, msg?: string) => assert.match(actual, pattern, msg),
+    toMatch: (actual: string, pattern: RegExp, msg?: string) => assert.match(actual, pattern, msg ?? `Expected ${String(actual)} to match ${String(pattern)}`),
     toContain: (haystack: string | any[], needle: any, msg?: string) => {
       if (typeof haystack === 'string') {
         assert.ok(haystack.includes(needle), msg || `Expected string to contain "${needle}"`);
@@ -110,9 +115,9 @@ export const expect: any = Object.assign(
         assert.ok(haystack.includes(needle), msg || `Expected array to contain item`);
       }
     },
-    toBeGreaterThan: (actual: number, threshold: number, msg?: string) => assert.ok(actual > threshold, msg),
-    toBeGreaterThanOrEqual: (actual: number, threshold: number, msg?: string) => assert.ok(actual >= threshold, msg),
-    toBeLessThanOrEqual: (actual: number, threshold: number, msg?: string) => assert.ok(actual <= threshold, msg),
+    toBeGreaterThan: (actual: number, threshold: number, msg?: string) => assert.ok(actual > threshold, msg ?? `Expected ${String(actual)} to be greater than ${String(threshold)}`),
+    toBeGreaterThanOrEqual: (actual: number, threshold: number, msg?: string) => assert.ok(actual >= threshold, msg ?? `Expected ${String(actual)} to be >= ${String(threshold)}`),
+    toBeLessThanOrEqual: (actual: number, threshold: number, msg?: string) => assert.ok(actual <= threshold, msg ?? `Expected ${String(actual)} to be <= ${String(threshold)}`),
   }
 );
 

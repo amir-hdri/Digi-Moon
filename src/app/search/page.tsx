@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useCallback, useMemo, useState, Suspense } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, Suspense } from 'react';
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { CategoryHeader, BottomNavbar, ProductCard } from '@/components';
+import { SearchBar } from '@/components/catalog/SearchBar';
 import { useCartStore } from '@/stores/useCartStore';
 import { toPersianDigits } from '@/lib/persian';
 import { searchCatalog, SORT_OPTIONS, type SortKey } from '@/lib/catalog';
@@ -14,9 +15,34 @@ const SUGGESTIONS = ['شیر', 'روغن زیتون', 'شامپو', 'چای', '�
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
   const query = searchParams.get('q') ?? '';
   const addItem = useCartStore((state) => state.addItem);
   const [sort, setSort] = useState<SortKey>('popular');
+
+  /*
+   * The page previously rendered *no* input — it only read `?q=`, so arriving
+   * here from the bottom-nav «جستجو» tab showed «عبارتی بنویسید» with nowhere
+   * to type. The field below keeps the URL as the single source of truth:
+   * typing debounces into `router.replace`, external `?q=` changes (suggestion
+   * chips, back/forward) flow back into the field.
+   */
+  const [term, setTerm] = useState(query);
+
+  useEffect(() => {
+    setTerm(query);
+  }, [query]);
+
+  useEffect(() => {
+    if (term === query) return;
+    const timeout = setTimeout(() => {
+      const next = term.trim();
+      router.replace(next ? `/search?q=${encodeURIComponent(next)}` : '/search', {
+        scroll: false,
+      });
+    }, 300);
+    return () => clearTimeout(timeout);
+  }, [term, query, router]);
 
   /*
     Replaces `searchAllStoreProducts()`, a fourth copy of the matching rules that used
@@ -52,6 +78,10 @@ function SearchPageContent() {
               ? `${toPersianDigits(products.length)} کالا یافت شد`
               : 'عبارتی بنویسید تا کالاهای مرتبط را ببینید.'}
           </p>
+
+          <div className="mt-4">
+            <SearchBar value={term} onChange={setTerm} placeholder="جستجو در کالاهای مون مارکت" />
+          </div>
         </div>
 
         {query.trim() ? (
@@ -138,7 +168,7 @@ function SearchPageContent() {
         )}
       </div>
 
-      <BottomNavbar activeTab="home" />
+      <BottomNavbar activeTab="search" />
     </main>
   );
 }

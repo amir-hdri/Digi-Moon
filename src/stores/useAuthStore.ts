@@ -8,6 +8,8 @@ export interface AuthStoreState {
   user: UserProfile | null;
   /** The address book, kept outside `user` so it still works while signed out. */
   addresses: Address[];
+  /** Wishlist, likewise independent of `user` so it survives signing in and out. */
+  favoriteProductIds: Array<string | number>;
   activeAddress: Address | null;
   login: (phoneNumber: string, userDetails?: Partial<UserProfile>) => void;
   logout: () => void;
@@ -18,7 +20,10 @@ export interface AuthStoreState {
   isFavorite: (productId: string | number) => boolean;
 }
 
-type AuthPersisted = Pick<AuthStoreState, 'isAuthenticated' | 'user' | 'addresses' | 'activeAddress'>;
+type AuthPersisted = Pick<
+  AuthStoreState,
+  'isAuthenticated' | 'user' | 'addresses' | 'activeAddress' | 'favoriteProductIds'
+>;
 
 /** Inert storage for SSR, where `window.localStorage` does not exist. */
 const ssrStorage: StateStorage = {
@@ -42,16 +47,19 @@ export const useAuthStore = create<AuthStoreState>()(
       isAuthenticated: false,
       user: null,
       addresses: mockAddresses,
+      favoriteProductIds: [],
       activeAddress: mockAddresses.find((a) => a.isDefault) ?? mockAddresses[0] ?? null,
 
       login: (phoneNumber, userDetails) => {
-        const { user, addresses } = get();
+        const { user, addresses, favoriteProductIds } = get();
         const updatedUser: UserProfile = {
           ...(user ?? mockUserProfile),
           ...userDetails,
           phoneNumber,
           addresses,
-          favoriteProductIds: user?.favoriteProductIds ?? mockUserProfile.favoriteProductIds ?? [],
+          // The store-level wishlist is authoritative — it is what the user curated, and
+          // it may have been built while signed out.
+          favoriteProductIds,
         };
         set({ isAuthenticated: true, user: updatedUser });
       },
@@ -87,19 +95,34 @@ export const useAuthStore = create<AuthStoreState>()(
         });
       },
 
+      /**
+       * Favourites live on the store, not inside `user`.
+       *
+       * The previous version wrote to `state.user` and, when signed out, fell back to
+       * `{...mockUserProfile, favoriteProductIds}`. Since signing out became the default
+       * that meant *every* signed-out favourite tap fabricated a logged-in-looking profile
+       * (wallet balance, name, and `mockUserProfile.addresses`), which was then persisted
+       * and merged into the next real `login()`, and which overwrote the live address book
+       * so `user.addresses` silently diverged from `addresses`.
+       *
+       * A signed-out wishlist is a normal thing to have, so it is kept as its own field.
+       */
       toggleFavorite: (productId) => {
         set((state) => {
-          const current = state.user?.favoriteProductIds ?? [];
+          const current = state.favoriteProductIds;
           const exists = current.some((id) => String(id) === String(productId));
           const next = exists
             ? current.filter((id) => String(id) !== String(productId))
             : [...current, productId];
-          return { user: state.user ? { ...state.user, favoriteProductIds: next } : { ...mockUserProfile, favoriteProductIds: next } };
+          return {
+            favoriteProductIds: next,
+            user: state.user ? { ...state.user, favoriteProductIds: next } : null,
+          };
         });
       },
 
       isFavorite: (productId) =>
-        (get().user?.favoriteProductIds ?? []).some((id) => String(id) === String(productId)),
+        get().favoriteProductIds.some((id) => String(id) === String(productId)),
     }),
     {
       name: 'dijimoon_auth',
@@ -109,11 +132,20 @@ export const useAuthStore = create<AuthStoreState>()(
       // the first client render agree — reading localStorage during render caused
       // hydration mismatches on the cart badge and the profile link.
       skipHydration: true,
+      /*
+        Without a `migrate`, zustand logs an error and hands `merge` an `undefined`
+        payload, so bumping `version` silently discards everything a returning shopper
+        had. The v1 shape had no `version`-guarded fields worth transforming, so the
+        migration is a pass-through — its presence is the point: future version bumps
+        have an obvious home.
+      */
+      migrate: (persistedState) => persistedState as AuthPersisted,
       partialize: (state) => ({
         isAuthenticated: state.isAuthenticated,
         user: state.user,
         addresses: state.addresses,
         activeAddress: state.activeAddress,
+        favoriteProductIds: state.favoriteProductIds,
       }),
     }
   )

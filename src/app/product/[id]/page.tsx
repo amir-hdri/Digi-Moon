@@ -51,7 +51,7 @@ export default function ProductDetailPage({ params }: ProductDetailPageProps) {
   const [isAdded, setIsAdded] = useState(false);
   const toggleFavorite = useAuthStore((state) => state.toggleFavorite);
   const isFavorite = useAuthStore((state) =>
-    (state.user?.favoriteProductIds ?? []).some((id) => String(id) === String(product.id))
+    state.favoriteProductIds.some((id) => String(id) === String(product.id))
   );
 
   // Related products from same category

@@ -37,6 +37,8 @@ export default function ProfilePage() {
   const user = useAuthStore((s) => s.user);
   const activeAddress = useAuthStore((s) => s.activeAddress);
   const setActiveAddress = useAuthStore((s) => s.setActiveAddress);
+  const favoriteProductIds = useAuthStore((s) => s.favoriteProductIds);
+  const addresses = useAuthStore((s) => s.addresses);
   const addItem = useCartStore((state) => state.addItem);
   const placedOrders = useOrderStore((state) => state.orders);
   const orders = [...placedOrders, ...mockOrders];
@@ -45,7 +47,9 @@ export default function ProfilePage() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isAddressModalOpen, setIsAddressModalOpen] = useState(false);
 
-  const favoriteProducts = (user?.favoriteProductIds ?? [])
+  // Read the store-level wishlist, not `user?.favoriteProductIds ?? []`: the `?? []`
+  // allocates a new array on every call, which `useSyncExternalStore` cannot cache.
+  const favoriteProducts = favoriteProductIds
     .map((id) => mockProducts.find((p) => String(p.id) === String(id)))
     .filter((p): p is (typeof mockProducts)[number] => Boolean(p));
 
@@ -267,8 +271,8 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            {user?.addresses && user.addresses.length > 0 ? (
-              user.addresses.map((addr) => {
+            {addresses.length > 0 ? (
+              addresses.map((addr) => {
                 const isSelected = activeAddress?.id === addr.id;
                 return (
                   <div

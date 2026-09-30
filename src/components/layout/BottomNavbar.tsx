@@ -42,7 +42,7 @@ export const BottomNavbar: React.FC<BottomNavbarProps> = ({
 
   const tabs = [
     { id: 'home'       as BottomNavTab, label: 'خانه',      href: '/',                    icon: Home },
-    { id: 'categories' as BottomNavTab, label: 'دسته‌ها',    href: '/category/groceries',  icon: Grid },
+    { id: 'categories' as BottomNavTab, label: 'دسته‌ها',    href: '/categories',         icon: Grid },
     { id: 'search'     as BottomNavTab, label: 'جستجو',     href: '/search',              icon: Search },
     { id: 'cart'       as BottomNavTab, label: 'سبد خرید',  href: '/cart',                icon: ShoppingBag, badge: visibleCartCount },
     { id: 'profile'    as BottomNavTab, label: 'پروفایل',   href: '/profile',             icon: User },

@@ -52,6 +52,7 @@ export const useOrderStore = create<OrderStore>()(
       })),
       // See `useMessageStore`: hydrating during render caused an update loop. See `StoreHydration`.
       skipHydration: true,
+      migrate: (persisted) => persisted,
       partialize: (state) => ({ orders: state.orders }),
     }
   )

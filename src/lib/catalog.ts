@@ -63,7 +63,7 @@ function toNode(category: MoonMarketCategory): CategoryNode {
     title: category.title,
     icon: category.icon,
     badge: category.badge,
-    matchIds: [category.id],
+    matchIds: [category.id, ...category.children.map((child) => child.id)],
     isParent: true,
     children: category.children.map((child) => ({
       id: child.id,
@@ -114,8 +114,16 @@ for (const node of categoryTree) {
  */
 export function resolveCategory(slugOrId: string | null | undefined): CategoryNode | null {
   if (!slugOrId) return null;
+  // Ids/slugs are ASCII kebab-case: match them verbatim (trimmed, lowercased)
+  // FIRST. The Persian search normalizer below turns `rice-grains` into
+  // `rice grains`, which matches nothing — routing every hyphenated id to a
+  // `null` node (and subcategory pages to an unfiltered catalog).
+  const raw = slugOrId.trim().toLowerCase();
+  if (!raw) return null;
+  const direct = bySlug.get(raw) ?? byId.get(raw);
+  if (direct) return direct;
   const key = normalizePersian(slugOrId);
-  if (!key) return null;
+  if (!key || key === raw) return null;
   return bySlug.get(key) ?? byId.get(key) ?? null;
 }
 

@@ -194,33 +194,129 @@ function div(a: number, b: number): number {
   return Math.trunc(a / b);
 }
 
-/** Converts a Gregorian `Date` to its Jalali `{ year, month, day }` parts. */
+/** Truncated modulo that always returns a non-negative result, unlike `%`. */
+function mod(a: number, b: number): number {
+  return a - b * Math.floor(a / b);
+}
+
+/**
+ * Converts a Gregorian `Date` to its Jalali (Solar Hijri) `{ year, month, day }`.
+ *
+ * Calendar arithmetic ported from jalaali-js (break-table leap cycles over
+ * Julian Day Numbers; see Borkowski's analysis and the Fourmilab calendar
+ * reference cited there). `tests/e2e/tier5_shared_foundations.spec.ts`
+ * cross-checks this against `Intl.DateTimeFormat('en-US-u-ca-persian')` over a
+ * 20-year window, plus month-length and Nowruz-boundary checks.
+ */
 export function toJalali(date: Date = new Date()): { year: number; month: number; day: number } {
-  const gy = date.getFullYear();
-  const gm = date.getMonth() + 1;
-  const gd = date.getDate();
+  const jdn = gregorianToJd(date.getFullYear(), date.getMonth() + 1, date.getDate());
+  const converted = jdToJalali(jdn);
+  return { year: converted.jy, month: converted.jm, day: converted.jd };
+}
 
-  const gDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-  const gy2 = gm > 2 ? gy + 1 : gy;
+/**
+ * Julian Day Number for a Gregorian date (jalaali-js `g2d`).
+ * Verified: `gregorianToJd(2024, 3, 20) === 2460390`.
+ */
+function gregorianToJd(y: number, m: number, d: number): number {
   let days =
-    355666 +
-    365 * gy +
-    div(gy2 + 3, 4) -
-    div(gy2 + 99, 100) +
-    div(gy2 + 399, 400) +
-    gd +
-    gDaysInMonth.slice(0, gm - 1).reduce((a, b) => a + b, 0);
+    div((y + div(m - 8, 6) + 100100) * 1461, 4) +
+    div(153 * mod(m + 9, 12) + 2, 5) +
+    d -
+    34840408;
+  days = days - div(div(y + 100100 + div(m - 8, 6), 100) * 3, 4) + 752;
+  return days;
+}
 
-  const jy = -1595 + 33 * div(days, 12053);
-  days %= 12053;
-  const year = jy + 4 * div(days, 1461);
-  days %= 1461;
-  if (days > 365) {
-    const extraYears = div(days - 1, 365);
-    days = (days - 1) % 365;
-    return { year: year + extraYears, month: div(days, 31) + 1, day: (days % 31) + 1 };
+/** Gregorian date for a Julian Day Number (jalaali-js `d2g`). */
+function gregorianFromJd(jdn: number): { gy: number; gm: number; gd: number } {
+  let j = 4 * jdn + 139361631;
+  j = j + div(div(4 * jdn + 183187720, 146097) * 3, 4) * 4 - 3908;
+  const i = div(tmod(j, 1461), 4) * 5 + 308;
+  const gd = div(tmod(i, 153), 5) + 1;
+  const gm = tmod(div(i, 153), 12) + 1;
+  const gy = div(j, 1461) - 100100 + div(8 - gm, 6);
+  return { gy, gm, gd };
+}
+
+/**
+ * Truncating remainder with jalaali-js `mod` semantics. Unlike the floor-based
+ * `mod` above it can return negative values (e.g. `tmod(-1, 4) === -1`), which
+ * the leap calculation below depends on — do not "simplify" these together.
+ */
+function tmod(a: number, b: number): number {
+  return a - Math.trunc(a / b) * b;
+}
+
+/** Start years of the 33-year leap-cycle rules (jalaali-js `breaks`). */
+const JALALI_BREAKS = [
+  -61, 9, 38, 199, 426, 686, 756, 818, 1111, 1181, 1210, 1635, 2060, 2097,
+  2192, 2262, 2324, 2394, 2456, 3178,
+];
+
+/**
+ * Leap status and Gregorian March day of Farvardin 1st for a Jalali year
+ * (jalaali-js `jalCal`). `leap` is years since the last leap year (0–4).
+ */
+function jalCal(jy: number): { leap: number; gy: number; march: number } {
+  const bl = JALALI_BREAKS.length;
+  const gy = jy + 621;
+  let leapJ = -14;
+  let jp = JALALI_BREAKS[0];
+  let jm = 0;
+  let jump = 0;
+  if (jy < jp || jy >= JALALI_BREAKS[bl - 1]) throw new Error(`Invalid Jalaali year ${jy}`);
+  // Find the limiting years for the Jalaali year jy.
+  for (let i = 1; i < bl; i += 1) {
+    jm = JALALI_BREAKS[i];
+    jump = jm - jp;
+    if (jy < jm) break;
+    leapJ = leapJ + div(jump, 33) * 8 + div(tmod(jump, 33), 4);
+    jp = jm;
   }
-  return { year, month: div(days, 31) + 1, day: (days % 31) + 1 };
+  const n = jy - jp;
+  // Leap years from AD 621 to the beginning of the current Jalaali year.
+  leapJ = leapJ + div(n, 33) * 8 + div(tmod(n, 33) + 3, 4);
+  if (tmod(jump, 33) === 4 && jump - n === 4) leapJ += 1;
+  // Same in the Gregorian calendar, then the March day of Farvardin 1st.
+  const leapG = div(gy, 4) - div((div(gy, 100) + 1) * 3, 4) - 150;
+  const march = 20 + leapJ - leapG;
+  // Years since the last leap year.
+  let nn = n;
+  if (jump - n < 6) nn = n - jump + div(jump + 4, 33) * 33;
+  let leap = tmod(tmod(nn + 1, 33) - 1, 4);
+  if (leap === -1) leap = 4;
+  return { leap, gy, march };
+}
+
+/** Jalali date for a Julian Day Number (jalaali-js `d2j`). */
+function jdToJalali(jdn: number): { jy: number; jm: number; jd: number } {
+  const gy = gregorianFromJd(jdn).gy;
+  let jy = gy - 621;
+  const r = jalCal(jy);
+  const jdn1f = gregorianToJd(gy, 3, r.march);
+  // Days passed since 1 Farvardin.
+  let k = jdn - jdn1f;
+  let jm: number;
+  let jd: number;
+  if (k >= 0) {
+    if (k <= 185) {
+      // The first 6 months.
+      jm = 1 + div(k, 31);
+      jd = tmod(k, 31) + 1;
+      return { jy, jm, jd };
+    }
+    // The remaining months.
+    k -= 186;
+  } else {
+    // Previous Jalaali year.
+    jy -= 1;
+    k += 179;
+    if (r.leap === 1) k += 1;
+  }
+  jm = 7 + div(k, 30);
+  jd = tmod(k, 30) + 1;
+  return { jy, jm, jd };
 }
 
 /** `۱۴۰۵/۰۶/۳۱` */
@@ -255,10 +351,10 @@ export function buildTrackingCode(): string {
  */
 export function normalizeIranianMobile(input: string | null | undefined): string {
   if (!input) return '';
+  // `\D` stripping already removed the `+`, so there is no `+98` case to test here.
   let digits = toEnglishDigits(input).replace(/\D/g, '');
-  if (digits.startsWith('+98')) digits = `0${digits.slice(3)}`;
+  if (digits.startsWith('0098')) digits = `0${digits.slice(4)}`;
   else if (digits.startsWith('98') && digits.length === 12) digits = `0${digits.slice(2)}`;
-  else if (digits.startsWith('0098')) digits = `0${digits.slice(4)}`;
   return /^09\d{9}$/.test(digits) ? digits : '';
 }
 

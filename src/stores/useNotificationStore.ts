@@ -134,6 +134,7 @@ export const useNotificationStore = create<NotificationStore>()(
       })),
       // See `useMessageStore`: hydrating during render caused an update loop. See `StoreHydration`.
       skipHydration: true,
+      migrate: (persisted) => persisted,
       partialize: (state) => ({ readIds: state.readIds, local: state.local }),
     }
   )

@@ -68,6 +68,7 @@ export const useThemeStore = create<ThemeStoreState>()(
       // Rehydrated in an effect (see `StoreHydration`). The anti-FOUC script in the root
       // layout applies the class synchronously before paint; this keeps the store in sync.
       skipHydration: true,
+      migrate: (persistedState) => persistedState as ThemePersisted,
       partialize: (state) => ({ theme: state.theme, resolvedTheme: state.resolvedTheme }),
     }
   )

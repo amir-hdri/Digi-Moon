@@ -170,6 +170,7 @@ export const useMessageStore = create<MessageStore>()(
         exceeded" and the page fell to the error boundary.
       */
       skipHydration: true,
+      migrate: (persisted) => persisted,
       partialize: (state) => ({ threads: state.threads, activeThreadId: state.activeThreadId }),
     }
   )

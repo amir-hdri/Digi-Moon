@@ -31,6 +31,14 @@ export interface CartStoreState {
     selectedWarranty?: string
   ) => void;
   removeItem: (productId: string | number, selectedColor?: ProductColor | string) => void;
+  /** Removes every colour variant of a product. The cart page's per-row delete. */
+  removeAllVariantsOf: (productId: string | number) => void;
+  /** Removes exactly one cart line, addressed by `cartLineId(...)`. */
+  removeLine: (lineId: string) => void;
+  /** Sets the quantity of exactly one cart line. Clamped to stock; `<= 0` removes it. */
+  setLineQuantity: (lineId: string, quantity: number) => void;
+  /** Quantity of exactly one cart line, or 0. */
+  getLineQuantity: (lineId: string) => number;
   updateQuantity: (
     productId: string | number,
     quantity: number,
@@ -104,38 +112,58 @@ export const useCartStore = create<CartStoreState>()(
       },
 
       /**
-       * Removing without a colour drops every variant of the product (the cart page's
-       * per-row delete). Pass `selectedColor` to target a single variant.
+       * Removes ONE cart line, addressed by its `lineId`.
+       *
+       * This is the primitive. `removeItem(pid)` cannot be: with `selectedColor`
+       * omitted there is no way to say "the uncoloured line" as opposed to "every
+       * variant", and the old implementation silently did the latter — so tapping
+       * "−" on a product card deleted every colour of that product at once.
        */
-      removeItem: (productId, selectedColor) => {
-        const lineId =
-          selectedColor === undefined ? null : cartLineId(productId, selectedColor);
+      removeLine: (lineId) => {
         set((state) => ({
-          items: lineId
-            ? state.items.filter(
-                (item) => cartLineId(item.product.id, item.selectedColor) !== lineId
-              )
-            : state.items.filter((item) => String(item.product.id) !== String(productId)),
+          items: state.items.filter(
+            (item) => cartLineId(item.product.id, item.selectedColor) !== lineId
+          ),
         }));
       },
 
-      updateQuantity: (productId, quantity, selectedColor) => {
-        if (quantity <= 0) {
-          get().removeItem(productId, selectedColor);
-          return;
-        }
+      /** Removes every colour variant of a product. The cart page's per-row delete. */
+      removeAllVariantsOf: (productId) => {
+        set((state) => ({
+          items: state.items.filter((item) => String(item.product.id) !== String(productId)),
+        }));
+      },
+
+      /** Sets the quantity of ONE line. Clamped to the available stock. */
+      setLineQuantity: (lineId, quantity) => {
         set((state) => ({
           items: state.items.map((item) => {
-            const matches =
-              selectedColor === undefined
-                ? String(item.product.id) === String(productId)
-                : cartLineId(item.product.id, item.selectedColor) ===
-                  cartLineId(productId, selectedColor);
-            if (!matches) return item;
+            if (cartLineId(item.product.id, item.selectedColor) !== lineId) return item;
+            if (quantity <= 0) return null;
             const max = item.product.stockCount ?? Number.POSITIVE_INFINITY;
             return { ...item, quantity: Math.min(max, quantity) };
-          }),
+          }).filter((item): item is NonNullable<typeof item> => item !== null),
         }));
+      },
+
+      /** Quantity of one specific line. 0 when the line is not in the cart. */
+      getLineQuantity: (lineId) =>
+        get().items.find(
+          (item) => cartLineId(item.product.id, item.selectedColor) === lineId
+        )?.quantity ?? 0,
+
+      /**
+       * Colour-aware convenience wrapper for the product detail page, which *does* track
+       * a selected colour. With `selectedColor === undefined` it addresses the uncoloured
+       * line — the same line a product card adds.
+       */
+      updateQuantity: (productId, quantity, selectedColor) => {
+        get().setLineQuantity(cartLineId(productId, selectedColor), quantity);
+      },
+
+      /** @see removeLine */
+      removeItem: (productId, selectedColor) => {
+        get().removeLine(cartLineId(productId, selectedColor));
       },
 
       clearCart: () => set({ items: [] }),
@@ -191,6 +219,14 @@ export const useCartStore = create<CartStoreState>()(
       // cart page) disagrees with SSR and React throws hydration error #418.
       // StoreHydration rehydrates all stores once, after mount.
       skipHydration: true,
+      /*
+        Without a `migrate`, zustand logs an error and hands `merge` an `undefined`
+        payload, so bumping `version` silently discards everything a returning shopper
+        had. The v1 shape had no `version`-guarded fields worth transforming, so the
+        migration is a pass-through — its presence is the point: future version bumps
+        have an obvious home.
+      */
+      migrate: (persistedState) => persistedState as CartPersistedState,
       partialize: (state) => ({
         items: state.items.map((item) => ({
           productId: String(item.product.id),

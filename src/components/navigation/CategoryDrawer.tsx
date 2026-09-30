@@ -53,8 +53,11 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
   return (
     <AnimatePresence>
       {isOpen ? (
+        // NOTE (RTL): the page is `dir="rtl"`, so flex main-start is the RIGHT
+        // edge — `justify-start` docks the panel on the right, where a Persian
+        // drawer belongs. (`justify-end` would dock it on the left.)
         <div
-          className="fixed inset-0 z-50 flex justify-end"
+          className="fixed inset-0 z-50 flex justify-start"
           role="dialog"
           aria-modal="true"
           aria-label="منوی دسته‌بندی و ناوبری مون مارکت"
@@ -78,12 +81,13 @@ export const CategoryDrawer: React.FC<CategoryDrawerProps> = ({
             exit={reduceMotion ? undefined : { x: '100%' }}
             transition={reduceMotion ? { duration: 0 } : { type: 'spring', damping: 28, stiffness: 300 }}
             drag={reduceMotion ? false : 'x'}
-            dragConstraints={{ left: 0, right: 0 }}
+            // Right-docked panel: swipe LEFT (negative x) to dismiss.
+            dragConstraints={{ left: -160, right: 0 }}
             dragElastic={0.12}
             onDragEnd={(_, info) => {
-              if (info.offset.x > 90) onClose();
+              if (info.offset.x < -90) onClose();
             }}
-            className="relative w-[340px] max-w-[90vw] h-full bg-white dark:bg-zinc-900 border-r border-slate-200 dark:border-zinc-800 shadow-2xl flex flex-col z-10 text-right select-none touch-pan-y"
+            className="relative w-[340px] max-w-[90vw] h-full bg-white dark:bg-zinc-900 border-e border-slate-200 dark:border-zinc-800 shadow-2xl flex flex-col z-10 text-right select-none touch-pan-y"
           >
             <div className="p-4 border-b border-slate-200/80 dark:border-zinc-800 flex items-center justify-between">
               <div className="flex items-center gap-2.5">

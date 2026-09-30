@@ -71,7 +71,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
           <div className="relative z-10 space-y-5">
             {/* Top Row: User Avatar & Info + Logout */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-3.5 space-x-reverse">
+              <div className="flex items-center gap-3.5">
                 <div className="w-14 h-14 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center text-white border border-white/30 shadow-inner">
                   <User className="w-7 h-7" />
                 </div>
@@ -137,7 +137,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
           onClick={onFestivalClick}
           className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
-          <div className="flex items-center space-x-3 space-x-reverse">
+              <div className="flex items-center gap-3">
             <div className="w-11 h-11 bg-gradient-to-br from-red-500 to-pink-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
               <Sparkles className="w-5 h-5 text-white" />
             </div>
@@ -158,7 +158,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
           onClick={onOrdersClick}
           className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
-          <div className="flex items-center space-x-3 space-x-reverse">
+              <div className="flex items-center gap-3">
             <div className="w-11 h-11 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
               <ShoppingBag className="w-5 h-5 text-white" />
             </div>
@@ -179,7 +179,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
           onClick={onFavoritesClick}
           className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
-          <div className="flex items-center space-x-3 space-x-reverse">
+              <div className="flex items-center gap-3">
             <div className="w-11 h-11 bg-gradient-to-br from-amber-500 to-orange-500 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
               <Heart className="w-5 h-5 text-white" />
             </div>
@@ -200,7 +200,7 @@ export const ProfileHero: React.FC<ProfileHeroProps> = ({
           onClick={onAddressClick}
           className="w-full glass-effect p-4 rounded-2xl shadow-sm hover:shadow-md flex items-center justify-between transition-colors cursor-pointer bg-white/80 dark:bg-zinc-900/80 border border-slate-200/80 dark:border-zinc-800"
         >
-          <div className="flex items-center space-x-3 space-x-reverse">
+              <div className="flex items-center gap-3">
             <div className="w-11 h-11 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center text-white shadow-sm shrink-0">
               <MapPin className="w-5 h-5 text-white" />
             </div>

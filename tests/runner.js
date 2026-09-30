@@ -13,7 +13,11 @@
 
 import { pathToFileURL } from 'node:url';
 import * as path from 'node:path';
+import { register } from 'node:module';
 import { TestRegistry } from './harness.ts';
+
+// Resolve the `@/` tsconfig alias for specs that import real app modules.
+register('./alias-hooks.mjs', pathToFileURL(path.join(process.cwd(), 'tests', 'runner.js')));
 
 // ANSI color codes for terminal output
 const colors = {
@@ -41,6 +45,7 @@ async function main() {
     { tier: 'tier2', path: path.join(rootDir, 'tests', 'e2e', 'tier2_boundary_corner.spec.ts') },
     { tier: 'tier3', path: path.join(rootDir, 'tests', 'e2e', 'tier3_pairwise_combinations.spec.ts') },
     { tier: 'tier4', path: path.join(rootDir, 'tests', 'e2e', 'tier4_real_world_scenarios.spec.ts') },
+    { tier: 'tier5', path: path.join(rootDir, 'tests', 'e2e', 'tier5_shared_foundations.spec.ts') },
   ];
 
   // Load test suites

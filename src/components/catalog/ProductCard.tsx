@@ -9,7 +9,7 @@ import { formatToman, toPersianDigits } from '@/lib/persian';
 import { getFileUrl } from '@/lib/api';
 import { PRODUCT_PLACEHOLDER } from '@/lib/product-images';
 import { discountOf } from '@/lib/catalog';
-import { useCartStore } from '@/stores/useCartStore';
+import { cartLineId, useCartStore } from '@/stores/useCartStore';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { useToastStore } from '@/stores/useToastStore';
 import {
@@ -27,14 +27,17 @@ import {
 export interface ProductCardProps {
   product: Product;
   onAddToCart?: (product: Product) => void;
-  onClick?: (product: Product) => void;
   isPriority?: boolean;
 }
 
+/*
+ * The old `onClick` prop is gone. No caller ever passed it, so the card rendered
+ * `cursor-pointer` and navigated nowhere; navigation is now a real `<Link>`, which also
+ * restores keyboard and screen-reader access that an onClick-on-a-div never had.
+ */
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onAddToCart,
-  onClick,
   isPriority = false,
 }) => {
   const reduceMotion = useReducedMotion();
@@ -46,19 +49,27 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     actually changed re-renders.
   */
   const addItem = useCartStore((state) => state.addItem);
-  const updateQuantity = useCartStore((state) => state.updateQuantity);
-  const removeItem = useCartStore((state) => state.removeItem);
+  const setLineQuantity = useCartStore((state) => state.setLineQuantity);
+
+  /*
+    A card is colour-unaware: it adds the uncoloured line and manages that line only.
+    The previous version summed every colour variant into one number and then called the
+    colour-less `updateQuantity`, which rewrote *all* variants at once — so with 1 black +
+    1 white in the cart the card showed ۲ and tapping "+" jumped the cart to 4, and "−"
+    deleted both lines. Colour-specific lines belong to the product page.
+  */
+  const lineId = cartLineId(product.id);
   const cartQty = useCartStore((state) =>
-    state.items.reduce(
-      (sum, item) =>
-        String(item.product.id) === String(product.id) ? sum + item.quantity : sum,
-      0
-    )
+    state.items.find(
+      (item) => cartLineId(item.product.id, item.selectedColor) === lineId
+    )?.quantity ?? 0
   );
 
   const toggleFavorite = useAuthStore((state) => state.toggleFavorite);
+  // `state.favoriteProductIds` (stable ref) — never `user?.favoriteProductIds ?? []`,
+  // which allocates a new array per call and re-enters React's render loop.
   const isFavorite = useAuthStore((state) =>
-    (state.user?.favoriteProductIds ?? []).some((id) => String(id) === String(product.id))
+    state.favoriteProductIds.some((id) => String(id) === String(product.id))
   );
 
   const [justAdded, setJustAdded] = useState(false);
@@ -115,19 +126,18 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      updateQuantity(product.id, cartQty + 1);
+      setLineQuantity(lineId, cartQty + 1);
     },
-    [cartQty, product.id, updateQuantity]
+    [cartQty, lineId, setLineQuantity]
   );
 
   const handleDecrement = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-      if (cartQty <= 1) removeItem(product.id);
-      else updateQuantity(product.id, cartQty - 1);
+      setLineQuantity(lineId, cartQty - 1);
     },
-    [cartQty, product.id, removeItem, updateQuantity]
+    [cartQty, lineId, setLineQuantity]
   );
 
   const handleFavoriteClick = useCallback(
@@ -139,7 +149,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
     [product.id, toggleFavorite]
   );
 
-  const handleCardClick = useCallback(() => onClick?.(product), [onClick, product]);
   const detailHref = `/product/${product.slug}`;
   const detailLabel = `مشاهده جزئیات ${product.title}`;
 
@@ -182,10 +191,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({
             href={detailHref}
             aria-label={detailLabel}
             className="absolute inset-0 z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-emerald-500 rounded-xl sm:rounded-2xl"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleCardClick();
-            }}
           />
 
           <Image
