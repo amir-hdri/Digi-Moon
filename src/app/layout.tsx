@@ -75,6 +75,10 @@ export const metadata: Metadata = {
     images: ['/logo-moonmarket.jpg'],
   },
   robots: { index: true, follow: true },
+  // Google Search Console ownership verification (URL-prefix property).
+  // NOTE: DNS-based verification is impossible for *.vercel.app subdomains
+  // (Vercel owns that DNS), so the HTML meta-tag route is used instead.
+  verification: { google: 'otozO84556YaqIOVSfhnNexBA6FzU9ewl78RUXrnHWA' },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
